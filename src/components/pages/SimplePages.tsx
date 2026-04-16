@@ -55,9 +55,9 @@ export const Contact: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-14 grid md:grid-cols-[1fr_1.5fr] gap-12">
         <div className="space-y-6">
           {[
-            { icon: MapPin, title: 'Head Office', text: 'Autostrada Tiranë-Durrës, km 8\nVorë, Albania' },
-            { icon: Phone, title: 'Phone', text: '+355 69 123 4567\n+355 4 555 1234' },
-            { icon: Mail, title: 'Email', text: 'info@kitchenmfg.com\nsales@kitchenmfg.com' },
+            { icon: MapPin, title: 'Head Office', text: 'Kosovë, Prizren, Lubizhde\nrruga: Tranziti Vjeter' },
+            { icon: Phone, title: 'Phone', text: '+383 49 308 338' },
+            { icon: Mail, title: 'Email', text: 'info@jasin-metal.com' },
           ].map((item, i) => (
             <div key={i} className="flex gap-4 p-5 border border-neutral-200 hover:border-neutral-900 transition">
               <div className="w-10 h-10 bg-neutral-900 text-white flex items-center justify-center shrink-0">

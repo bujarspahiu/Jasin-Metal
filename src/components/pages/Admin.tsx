@@ -423,10 +423,10 @@ const SettingsAdmin: React.FC = () => {
         {tab === 'company' && (
           <div className="space-y-4">
             <div><label className="text-xs font-bold tracking-wider block mb-1">COMPANY NAME</label><input defaultValue="Kitchen Industrial Manufacturing" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">EMAIL</label><input defaultValue="info@kitchenmfg.com" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">PHONE</label><input defaultValue="+355 69 123 4567" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">WHATSAPP</label><input defaultValue="+355 69 123 4567" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">ADDRESS</label><textarea rows={3} defaultValue="Autostrada Tiranë-Durrës, km 8, Vorë, Albania" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">EMAIL</label><input defaultValue="info@jasin-metal.com" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">PHONE</label><input defaultValue="+383 49 308 338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">WHATSAPP</label><input defaultValue="+38349308338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">ADDRESS</label><textarea rows={3} defaultValue="Kosovë, Prizren, Lubizhde, rruga: Tranziti Vjeter" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">LANGUAGES</label><div className="flex gap-2"><span className="px-3 py-1 bg-neutral-900 text-white text-xs">English</span><span className="px-3 py-1 bg-neutral-900 text-white text-xs">Albanian</span><button className="px-3 py-1 border border-dashed border-neutral-400 text-xs text-neutral-500">+ Add</button></div></div>
           </div>
         )}

@@ -110,10 +110,10 @@ const Footer: React.FC = () => {
         <div>
           <div className="text-white font-bold text-xs tracking-[0.2em] mb-5">{t.footer.contactInfo.toUpperCase()}</div>
           <ul className="space-y-3 text-sm">
-            <li className="flex gap-3"><MapPin className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><span>Autostrada Tiranë-Durrës, km 8<br/>Vorë, Albania</span></li>
-            <li className="flex gap-3"><Phone className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><a href="tel:+355691234567" className="hover:text-white">+355 69 123 4567</a></li>
-            <li className="flex gap-3"><Mail className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><a href="mailto:info@kitchenmfg.com" className="hover:text-white">info@kitchenmfg.com</a></li>
-            <li className="flex gap-3"><MessageCircle className="w-4 h-4 mt-0.5 shrink-0 text-green-500" /><a href="https://wa.me/355691234567" target="_blank" rel="noreferrer" className="hover:text-white">WhatsApp Chat</a></li>
+            <li className="flex gap-3"><MapPin className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><span>Kosovë, Prizren, Lubizhde<br/>rruga: Tranziti Vjeter</span></li>
+            <li className="flex gap-3"><Phone className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><a href="tel:+38349308338" className="hover:text-white">+383 49 308 338</a></li>
+            <li className="flex gap-3"><Mail className="w-4 h-4 mt-0.5 shrink-0 text-neutral-500" /><a href="mailto:info@jasin-metal.com" className="hover:text-white">info@jasin-metal.com</a></li>
+            <li className="flex gap-3"><MessageCircle className="w-4 h-4 mt-0.5 shrink-0 text-green-500" /><a href="https://wa.me/38349308338" target="_blank" rel="noreferrer" className="hover:text-white">WhatsApp Chat</a></li>
           </ul>
         </div>
       </div>
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Floating WhatsApp */}
-      <a href="https://wa.me/355691234567" target="_blank" rel="noreferrer" className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl flex items-center justify-center text-white transition hover:scale-110">
+      <a href="https://wa.me/38349308338" target="_blank" rel="noreferrer" className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl flex items-center justify-center text-white transition hover:scale-110">
         <MessageCircle className="w-6 h-6" />
       </a>
     </footer>
