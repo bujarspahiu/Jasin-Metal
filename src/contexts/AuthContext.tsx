@@ -161,15 +161,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     persist(u);
     try {
-      await fetch('/api/crm/69e151eeabc82c9459d80766/subscribe', {
+      await fetch('/api/welcome-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: data.email,
-          name: `${data.firstName} ${data.lastName}`,
-          source: data.accountType === 'b2b' ? 'register-b2b' : 'register-b2c',
-          metadata: { accountType: data.accountType, company: data.companyName, vat: data.vatNumber },
-        }),
+        body: JSON.stringify({ email: data.email, firstName: data.firstName }),
       });
     } catch {}
     toast({ title: 'Account created', description: `Welcome aboard, ${u.firstName}.` });

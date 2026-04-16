@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useShop } from '@/contexts/ShopContext';
 import { PRODUCTS, CATEGORIES, Product } from '@/lib/data';
 import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut, X, Check, Star, Upload, ImageIcon } from 'lucide-react';
@@ -722,7 +722,9 @@ const ProductAddModal: React.FC<{
 
 const ProductsAdmin: React.FC = () => {
   const { t, lang } = useShop();
-  const [products, setProducts] = useState<Product[]>(() => [...PRODUCTS]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
@@ -746,18 +748,84 @@ const ProductsAdmin: React.FC = () => {
     return matchesSearch && matchesCategory && matchesStock;
   });
 
-  const handleSave = (updated: Product) => {
-    setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  useEffect(() => {
+    fetch('/api/products')
+      .then((r) => r.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Failed to load products');
+        setLoading(false);
+      });
+  }, []);
+
+  const adminHeaders = {
+    'Content-Type': 'application/json',
+    'X-Admin-Key': import.meta.env.VITE_ADMIN_KEY || '',
   };
 
-  const handleAdd = (newProduct: Product) => {
-    setProducts((prev) => [newProduct, ...prev]);
+  const handleSave = async (updated: Product) => {
+    try {
+      const res = await fetch(`/api/products/${updated.id}`, {
+        method: 'PUT',
+        headers: adminHeaders,
+        body: JSON.stringify(updated),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      const saved: Product = await res.json();
+      setProducts((prev) => prev.map((p) => (p.id === saved.id ? saved : p)));
+    } catch {
+      alert('Failed to save product. Please try again.');
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    setPendingDelete(null);
+  const handleAdd = async (newProduct: Product) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: adminHeaders,
+        body: JSON.stringify(newProduct),
+      });
+      if (!res.ok) throw new Error('Add failed');
+      const created: Product = await res.json();
+      setProducts((prev) => [...prev, created]);
+    } catch {
+      alert('Failed to add product. Please try again.');
+    }
   };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+        headers: adminHeaders,
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setPendingDelete(null);
+    } catch {
+      alert('Failed to delete product. Please try again.');
+      setPendingDelete(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-32 text-neutral-400 text-sm tracking-wider">
+        LOADING PRODUCTS...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-32 text-red-600 text-sm tracking-wider">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <>
