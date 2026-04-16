@@ -727,6 +727,19 @@ const ProductsAdmin: React.FC = () => {
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+
+  const filteredProducts = products.filter((p) => {
+    const q = search.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      p.name.en.toLowerCase().includes(q) ||
+      p.name.sq.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q);
+    const matchesCategory = !categoryFilter || p.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSave = (updated: Product) => {
     setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
@@ -766,10 +779,45 @@ const ProductsAdmin: React.FC = () => {
         </button>
       </div>
       <div className="bg-white border border-neutral-200 mb-4 p-4 flex items-center gap-3">
-        <Search className="w-4 h-4 text-neutral-400" />
-        <input placeholder={t.admin.products.searchProducts} className="flex-1 outline-none text-sm" />
-        <select className="border border-neutral-300 px-3 py-2 text-sm"><option>{t.admin.products.allCategories}</option></select>
+        <Search className="w-4 h-4 text-neutral-400 flex-shrink-0" />
+        <input
+          placeholder={t.admin.products.searchProducts}
+          className="flex-1 outline-none text-sm min-w-0"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="text-neutral-400 hover:text-neutral-700 flex-shrink-0"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+        <select
+          className="border border-neutral-300 px-3 py-2 text-sm flex-shrink-0"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="">{t.admin.products.allCategories}</option>
+          {CATEGORIES.map((c) => (
+            <option key={c.id} value={c.id}>{c.name.en}</option>
+          ))}
+        </select>
       </div>
+      {(search || categoryFilter) && (
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="text-xs text-neutral-500">
+            {filteredProducts.length} / {products.length} produkteve
+          </span>
+          <button
+            onClick={() => { setSearch(''); setCategoryFilter(''); }}
+            className="text-xs text-neutral-400 hover:text-neutral-700 tracking-[0.1em]"
+          >
+            FSHI FILTRAT
+          </button>
+        </div>
+      )}
       <div className="bg-white border border-neutral-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
@@ -784,7 +832,14 @@ const ProductsAdmin: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
+            {filteredProducts.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="p-10 text-center text-neutral-400 text-sm">
+                  Nuk u gjet asnjë produkt për "{search || categoryFilter}"
+                </td>
+              </tr>
+            ) : null}
+            {filteredProducts.map((p) => (
               <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
                 <td className="p-4 flex items-center gap-3">
                   <img src={p.image} className="w-10 h-10 object-contain bg-neutral-50 p-1 border border-neutral-100" alt="" />
