@@ -68,12 +68,20 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
 
         {/* Mobile nav */}
         <div className="md:hidden w-full bg-neutral-950 p-4 overflow-x-auto">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             {nav.map((n) => (
               <button key={n.id} onClick={() => setSection(n.id)} className={`px-3 py-2 text-xs font-bold whitespace-nowrap ${section === n.id ? 'bg-white text-neutral-900' : 'text-neutral-400'}`}>
                 {n.label}
               </button>
             ))}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="ml-auto flex items-center gap-1 px-3 py-2 text-xs text-red-400 whitespace-nowrap"
+              >
+                <LogOut className="w-3 h-3" /> Logout
+              </button>
+            )}
           </div>
         </div>
 
