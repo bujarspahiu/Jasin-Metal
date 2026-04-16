@@ -49,7 +49,7 @@ const Header: React.FC = () => {
               <a href="tel:+355691234567" className="hover:text-white transition">+355 69 123 4567</a>
               <span className="text-neutral-600 hidden sm:inline">|</span>
               {!isAuthenticated && (
-                <button onClick={() => openAuth('login')} className="hover:text-white transition hidden sm:inline">Sign In</button>
+                <button onClick={() => openAuth('login')} className="hover:text-white transition hidden sm:inline">{t.header.signIn}</button>
               )}
               <span className="text-neutral-600 hidden sm:inline">|</span>
               <div className="flex gap-1">
@@ -125,28 +125,28 @@ const Header: React.FC = () => {
                     {user.role !== 'customer' && <div className="inline-block mt-1 ml-1 text-[9px] tracking-wider bg-amber-500 text-white px-1.5 py-0.5">{user.role.replace('_', ' ').toUpperCase()}</div>}
                   </div>
                   <button onClick={() => { navigate({ name: 'account' }); setMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-neutral-50 flex items-center gap-3">
-                    <User className="w-4 h-4 text-neutral-500" /> My Account
+                    <User className="w-4 h-4 text-neutral-500" /> {t.header.myAccount}
                   </button>
                   <button onClick={() => { navigate({ name: 'account' }); setMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-neutral-50 flex items-center gap-3">
-                    <Package className="w-4 h-4 text-neutral-500" /> Orders
+                    <Package className="w-4 h-4 text-neutral-500" /> {t.header.orders}
                   </button>
                   <button onClick={() => { navigate({ name: 'wishlist' }); setMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-neutral-50 flex items-center gap-3">
-                    <Heart className="w-4 h-4 text-neutral-500" /> Wishlist
+                    <Heart className="w-4 h-4 text-neutral-500" /> {t.common.wishlist}
                   </button>
                   <button onClick={() => { navigate({ name: 'account' }); setMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-neutral-50 flex items-center gap-3">
-                    <Settings className="w-4 h-4 text-neutral-500" /> Settings
+                    <Settings className="w-4 h-4 text-neutral-500" /> {t.header.settings}
                   </button>
                   {canAccessAdmin() && (
                     <>
                       <div className="border-t border-neutral-100 my-1"></div>
                       <button onClick={() => { navigate({ name: 'admin' }); setMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-neutral-50 flex items-center gap-3 font-medium">
-                        <LayoutDashboard className="w-4 h-4 text-amber-500" /> Admin Panel
+                        <LayoutDashboard className="w-4 h-4 text-amber-500" /> {t.header.adminPanel}
                       </button>
                     </>
                   )}
                   <div className="border-t border-neutral-100 my-1"></div>
                   <button onClick={() => { logout(); setMenuOpen(false); navigate({ name: 'home' }); }} className="w-full text-left px-5 py-2.5 text-sm hover:bg-red-50 text-red-600 flex items-center gap-3">
-                    <LogOut className="w-4 h-4" /> Sign Out
+                    <LogOut className="w-4 h-4" /> {t.header.signOut}
                   </button>
                 </div>
               )}
@@ -154,7 +154,7 @@ const Header: React.FC = () => {
 
             {!isAuthenticated ? (
               <button onClick={() => openAuth('register')} className="hidden md:inline-flex ml-2 bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.15em] hover:bg-neutral-700 transition">
-                SIGN UP
+                {t.header.signUp.toUpperCase()}
               </button>
             ) : (
               <button onClick={() => navigate({ name: 'quote' })} className="hidden md:inline-flex ml-2 bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.15em] hover:bg-neutral-700 transition">
@@ -201,18 +201,18 @@ const Header: React.FC = () => {
               {!isAuthenticated && (
                 <>
                   <button onClick={() => { openAuth('login'); setMobileOpen(false); }} className="px-6 py-3 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-50 border-b border-neutral-100 flex items-center gap-2">
-                    <User className="w-4 h-4" /> Sign In
+                    <User className="w-4 h-4" /> {t.header.signIn}
                   </button>
                 </>
               )}
               {isAuthenticated && (
                 <>
                   <button onClick={() => { navigate({ name: 'account' }); setMobileOpen(false); }} className="px-6 py-3 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-50 border-b border-neutral-100 flex items-center gap-2">
-                    <User className="w-4 h-4" /> My Account
+                    <User className="w-4 h-4" /> {t.header.myAccount}
                   </button>
                   {canAccessAdmin() && (
                     <button onClick={() => { navigate({ name: 'admin' }); setMobileOpen(false); }} className="px-6 py-3 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-50 border-b border-neutral-100 flex items-center gap-2">
-                      <LayoutDashboard className="w-4 h-4" /> Admin Panel
+                      <LayoutDashboard className="w-4 h-4" /> {t.header.adminPanel}
                     </button>
                   )}
                 </>

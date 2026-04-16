@@ -39,7 +39,7 @@ interface ShopContextValue {
 const ShopContext = createContext<ShopContextValue | null>(null);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLang] = useState<Lang>('en');
+  const [lang, setLang] = useState<Lang>('sq');
   const [page, setPage] = useState<Page>({ name: 'home' });
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);

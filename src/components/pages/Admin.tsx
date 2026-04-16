@@ -10,16 +10,16 @@ interface AdminProps {
 }
 
 const Admin: React.FC<AdminProps> = ({ onLogout }) => {
-  const { navigate } = useShop();
+  const { navigate, t } = useShop();
   const [section, setSection] = useState<Section>('dashboard');
 
   const nav: { id: Section; label: string; icon: React.FC<{ className?: string }> }[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'products', label: 'Products', icon: Package },
-    { id: 'orders', label: 'Orders', icon: ShoppingCart },
-    { id: 'quotes', label: 'Quote Requests', icon: FileText },
-    { id: 'users', label: 'Users & Roles', icon: Users },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: t.admin.nav.dashboard, icon: LayoutDashboard },
+    { id: 'products', label: t.admin.nav.products, icon: Package },
+    { id: 'orders', label: t.admin.nav.orders, icon: ShoppingCart },
+    { id: 'quotes', label: t.admin.nav.quoteRequests, icon: FileText },
+    { id: 'users', label: t.admin.nav.usersRoles, icon: Users },
+    { id: 'settings', label: t.admin.nav.settings, icon: Settings },
   ];
 
   return (
@@ -31,12 +31,12 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
             <div className="mb-8" />
           ) : (
             <button onClick={() => navigate({ name: 'home' })} className="flex items-center gap-2 text-xs tracking-[0.2em] text-neutral-500 hover:text-white mb-8">
-              <ArrowLeft className="w-3 h-3" /> BACK TO STORE
+              <ArrowLeft className="w-3 h-3" /> {t.admin.panel.backToStore}
             </button>
           )}
           <div className="mb-10">
-            <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-1">ADMIN PANEL</div>
-            <div className="text-xl font-light text-white">Kitchen MFG.</div>
+            <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-1">{t.admin.panel.adminPanel}</div>
+            <div className="text-xl font-light text-white">{t.admin.panel.kitchenMfg}</div>
           </div>
           <nav className="space-y-1 flex-1">
             {nav.map((n) => (
@@ -47,12 +47,12 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
             ))}
           </nav>
           <div className="mt-10 pt-6 border-t border-neutral-800">
-            <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-3">SIGNED IN AS</div>
+            <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-3">{t.admin.panel.signedInAs}</div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-neutral-400 to-neutral-700 rounded-full flex items-center justify-center font-bold text-white">A</div>
               <div>
-                <div className="text-sm text-white">Admin User</div>
-                <div className="text-[10px] text-neutral-500">Super Admin</div>
+                <div className="text-sm text-white">{t.admin.panel.adminUser}</div>
+                <div className="text-[10px] text-neutral-500">{t.admin.panel.superAdmin}</div>
               </div>
             </div>
             {onLogout && (
@@ -60,7 +60,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                 onClick={onLogout}
                 className="w-full flex items-center gap-2 px-4 py-2.5 text-xs tracking-[0.15em] text-neutral-400 hover:text-red-400 hover:bg-red-900/20 transition"
               >
-                <LogOut className="w-3.5 h-3.5" /> LOGOUT
+                <LogOut className="w-3.5 h-3.5" /> {t.admin.panel.logout.toUpperCase()}
               </button>
             )}
           </div>
@@ -79,7 +79,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                 onClick={onLogout}
                 className="ml-auto flex items-center gap-1 px-3 py-2 text-xs text-red-400 whitespace-nowrap"
               >
-                <LogOut className="w-3 h-3" /> Logout
+                <LogOut className="w-3 h-3" /> {t.admin.panel.logout}
               </button>
             )}
           </div>
@@ -100,29 +100,33 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
 };
 
 const Dashboard: React.FC = () => {
+  const { t } = useShop();
   const stats = [
-    { label: 'Today Sales', value: '€4,820', change: '+12.4%', icon: DollarSign, color: 'text-green-600' },
-    { label: 'This Week', value: '€28,450', change: '+8.2%', icon: TrendingUp, color: 'text-green-600' },
-    { label: 'This Month', value: '€142,800', change: '+18.6%', icon: TrendingUp, color: 'text-green-600' },
-    { label: 'Pending Orders', value: '24', change: '4 new', icon: ShoppingCart, color: 'text-amber-600' },
+    { label: t.admin.stats.todaySales, value: '€4,820', change: '+12.4%', icon: DollarSign, color: 'text-green-600' },
+    { label: t.admin.stats.thisWeek, value: '€28,450', change: '+8.2%', icon: TrendingUp, color: 'text-green-600' },
+    { label: t.admin.stats.thisMonth, value: '€142,800', change: '+18.6%', icon: TrendingUp, color: 'text-green-600' },
+    { label: t.admin.stats.pendingOrders, value: '24', change: t.admin.stats.new, icon: ShoppingCart, color: 'text-amber-600' },
   ];
   const topProducts = PRODUCTS.slice(0, 5);
   const recentOrders = [
-    { id: 'ORD-4821', customer: 'Hotel Adriatic', total: 3240, status: 'In Production' },
-    { id: 'ORD-4820', customer: 'Bakery Artigiana', total: 1890, status: 'Shipped' },
-    { id: 'ORD-4819', customer: 'Restaurant Vila', total: 890, status: 'Paid' },
-    { id: 'ORD-4818', customer: 'Butcher Mario', total: 2450, status: 'Delivered' },
-    { id: 'ORD-4817', customer: 'Hotel Mediterranean', total: 5680, status: 'Processing' },
+    { id: 'ORD-4821', customer: 'Hotel Adriatic', total: 3240, status: t.admin.orders.inProduction },
+    { id: 'ORD-4820', customer: 'Bakery Artigiana', total: 1890, status: t.admin.orders.shipped },
+    { id: 'ORD-4819', customer: 'Restaurant Vila', total: 890, status: t.admin.orders.paid },
+    { id: 'ORD-4818', customer: 'Butcher Mario', total: 2450, status: t.admin.orders.delivered },
+    { id: 'ORD-4817', customer: 'Hotel Mediterranean', total: 5680, status: t.admin.orders.processing },
   ];
   return (
     <>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-light">Dashboard</h1>
-          <div className="text-sm text-neutral-500">Welcome back. Here's what's happening today.</div>
+          <h1 className="text-3xl font-light">{t.admin.dashboard.title}</h1>
+          <div className="text-sm text-neutral-500">{t.admin.dashboard.welcome}</div>
         </div>
         <select className="border border-neutral-300 px-4 py-2 text-sm bg-white">
-          <option>Last 30 days</option><option>Last 7 days</option><option>Today</option><option>Custom</option>
+          <option>{t.admin.dashboard.last30Days}</option>
+          <option>{t.admin.dashboard.last7Days}</option>
+          <option>{t.admin.dashboard.today}</option>
+          <option>{t.admin.dashboard.custom}</option>
         </select>
       </div>
 
@@ -143,8 +147,8 @@ const Dashboard: React.FC = () => {
       <div className="bg-white p-6 border border-neutral-200 mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <div className="font-bold">Revenue Overview</div>
-            <div className="text-xs text-neutral-500">Last 30 days</div>
+            <div className="font-bold">{t.admin.dashboard.revenueOverview}</div>
+            <div className="text-xs text-neutral-500">{t.admin.dashboard.last30Days}</div>
           </div>
           <div className="text-2xl font-bold">€142,800</div>
         </div>
@@ -159,8 +163,8 @@ const Dashboard: React.FC = () => {
       <div className="grid lg:grid-cols-2 gap-5">
         <div className="bg-white p-6 border border-neutral-200">
           <div className="flex items-center justify-between mb-4">
-            <div className="font-bold">Recent Orders</div>
-            <button className="text-xs text-neutral-500 hover:text-neutral-900">View all</button>
+            <div className="font-bold">{t.admin.dashboard.recentOrders}</div>
+            <button className="text-xs text-neutral-500 hover:text-neutral-900">{t.admin.dashboard.viewAll}</button>
           </div>
           <div className="space-y-2">
             {recentOrders.map((o) => (
@@ -179,7 +183,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="bg-white p-6 border border-neutral-200">
           <div className="flex items-center justify-between mb-4">
-            <div className="font-bold">Top Selling Products</div>
+            <div className="font-bold">{t.admin.dashboard.topSellingProducts}</div>
           </div>
           <div className="space-y-2">
             {topProducts.map((p, i) => (
@@ -200,65 +204,69 @@ const Dashboard: React.FC = () => {
       <div className="bg-amber-50 border border-amber-200 p-5 mt-8 flex items-start gap-3">
         <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
         <div>
-          <div className="font-bold text-sm text-amber-900">Low Stock Alert</div>
-          <div className="text-sm text-amber-800 mt-1">3 products are running low: Butcher Prep Station (3 units), Commercial Mixer 40L (4 units), Double Basin Sink (9 units).</div>
+          <div className="font-bold text-sm text-amber-900">{t.admin.dashboard.lowStockAlert}</div>
+          <div className="text-sm text-amber-800 mt-1">{t.admin.dashboard.lowStockMsg}</div>
         </div>
       </div>
     </>
   );
 };
 
-const ProductsAdmin: React.FC = () => (
-  <>
-    <div className="flex items-center justify-between mb-6">
-      <h1 className="text-3xl font-light">Products</h1>
-      <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2 hover:bg-neutral-700">
-        <Plus className="w-4 h-4" /> ADD PRODUCT
-      </button>
-    </div>
-    <div className="bg-white border border-neutral-200 mb-4 p-4 flex items-center gap-3">
-      <Search className="w-4 h-4 text-neutral-400" />
-      <input placeholder="Search products..." className="flex-1 outline-none text-sm" />
-      <select className="border border-neutral-300 px-3 py-2 text-sm"><option>All Categories</option></select>
-    </div>
-    <div className="bg-white border border-neutral-200 overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
-          <tr>
-            <th className="text-left p-4">PRODUCT</th>
-            <th className="text-left p-4">SKU</th>
-            <th className="text-left p-4">CATEGORY</th>
-            <th className="text-left p-4">PRICE</th>
-            <th className="text-left p-4">STOCK</th>
-            <th className="text-left p-4">STATUS</th>
-            <th className="p-4"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {PRODUCTS.map((p) => (
-            <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
-              <td className="p-4 flex items-center gap-3"><img src={p.image} className="w-10 h-10 object-contain bg-neutral-50 p-1" alt="" /><span className="font-medium">{p.name.en}</span></td>
-              <td className="p-4 text-neutral-500">{p.sku}</td>
-              <td className="p-4">{p.category}</td>
-              <td className="p-4 font-bold">{p.price ? `€${p.price}` : 'Quote'}</td>
-              <td className="p-4">
-                <span className={`${p.stock > 20 ? 'text-green-600' : p.stock > 5 ? 'text-amber-600' : 'text-red-600'} font-medium`}>{p.stock}</span>
-              </td>
-              <td className="p-4"><span className="text-xs bg-green-100 text-green-700 px-2 py-1 font-medium">Active</span></td>
-              <td className="p-4 flex gap-2">
-                <button className="text-neutral-500 hover:text-neutral-900"><Eye className="w-4 h-4" /></button>
-                <button className="text-neutral-500 hover:text-neutral-900"><Edit className="w-4 h-4" /></button>
-                <button className="text-neutral-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
-              </td>
+const ProductsAdmin: React.FC = () => {
+  const { t } = useShop();
+  return (
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-light">{t.admin.products.title}</h1>
+        <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2 hover:bg-neutral-700">
+          <Plus className="w-4 h-4" /> {t.admin.products.addProduct.toUpperCase()}
+        </button>
+      </div>
+      <div className="bg-white border border-neutral-200 mb-4 p-4 flex items-center gap-3">
+        <Search className="w-4 h-4 text-neutral-400" />
+        <input placeholder={t.admin.products.searchProducts} className="flex-1 outline-none text-sm" />
+        <select className="border border-neutral-300 px-3 py-2 text-sm"><option>{t.admin.products.allCategories}</option></select>
+      </div>
+      <div className="bg-white border border-neutral-200 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
+            <tr>
+              <th className="text-left p-4">{t.admin.products.product.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.products.sku.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.products.category.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.products.price.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.products.stock.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.products.status.toUpperCase()}</th>
+              <th className="p-4"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </>
-);
+          </thead>
+          <tbody>
+            {PRODUCTS.map((p) => (
+              <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
+                <td className="p-4 flex items-center gap-3"><img src={p.image} className="w-10 h-10 object-contain bg-neutral-50 p-1" alt="" /><span className="font-medium">{p.name.en}</span></td>
+                <td className="p-4 text-neutral-500">{p.sku}</td>
+                <td className="p-4">{p.category}</td>
+                <td className="p-4 font-bold">{p.price ? `€${p.price}` : 'Quote'}</td>
+                <td className="p-4">
+                  <span className={`${p.stock > 20 ? 'text-green-600' : p.stock > 5 ? 'text-amber-600' : 'text-red-600'} font-medium`}>{p.stock}</span>
+                </td>
+                <td className="p-4"><span className="text-xs bg-green-100 text-green-700 px-2 py-1 font-medium">{t.admin.products.active}</span></td>
+                <td className="p-4 flex gap-2">
+                  <button className="text-neutral-500 hover:text-neutral-900"><Eye className="w-4 h-4" /></button>
+                  <button className="text-neutral-500 hover:text-neutral-900"><Edit className="w-4 h-4" /></button>
+                  <button className="text-neutral-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
 
 const OrdersAdmin: React.FC = () => {
+  const { t } = useShop();
   const orders = [
     { id: 'ORD-4821', customer: 'Hotel Adriatic', total: 3240, status: 'In Production', date: '2026-04-16' },
     { id: 'ORD-4820', customer: 'Bakery Artigiana', total: 1890, status: 'Shipped', date: '2026-04-16' },
@@ -277,18 +285,39 @@ const OrdersAdmin: React.FC = () => {
     'Delivered': 'bg-green-100 text-green-700',
     'Cancelled': 'bg-red-100 text-red-700',
   }[s] || 'bg-neutral-100');
+  const statusLabel = (s: string) => ({
+    'Paid': t.admin.orders.paid,
+    'Processing': t.admin.orders.processing,
+    'In Production': t.admin.orders.inProduction,
+    'Ready to Ship': t.admin.orders.ready,
+    'Shipped': t.admin.orders.shipped,
+    'Delivered': t.admin.orders.delivered,
+    'Cancelled': t.admin.orders.cancelled,
+  }[s] || s);
+  const filters = [
+    t.admin.orders.all, t.admin.orders.new, t.admin.orders.paid, t.admin.orders.processing,
+    t.admin.orders.inProduction, t.admin.orders.ready, t.admin.orders.shipped,
+    t.admin.orders.delivered, t.admin.orders.cancelled,
+  ];
   return (
     <>
-      <h1 className="text-3xl font-light mb-6">Orders</h1>
+      <h1 className="text-3xl font-light mb-6">{t.admin.orders.title}</h1>
       <div className="flex gap-2 mb-6 overflow-x-auto">
-        {['All', 'New', 'Paid', 'Processing', 'In Production', 'Ready', 'Shipped', 'Delivered', 'Cancelled'].map((s) => (
+        {filters.map((s) => (
           <button key={s} className="px-4 py-2 text-xs font-bold border border-neutral-300 bg-white whitespace-nowrap hover:border-neutral-900">{s.toUpperCase()}</button>
         ))}
       </div>
       <div className="bg-white border border-neutral-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
-            <tr><th className="text-left p-4">ORDER</th><th className="text-left p-4">CUSTOMER</th><th className="text-left p-4">DATE</th><th className="text-left p-4">TOTAL</th><th className="text-left p-4">STATUS</th><th className="p-4"></th></tr>
+            <tr>
+              <th className="text-left p-4">{t.admin.orders.order.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.orders.customer.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.orders.date.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.orders.total.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.orders.status.toUpperCase()}</th>
+              <th className="p-4"></th>
+            </tr>
           </thead>
           <tbody>
             {orders.map((o) => (
@@ -297,7 +326,7 @@ const OrdersAdmin: React.FC = () => {
                 <td className="p-4">{o.customer}</td>
                 <td className="p-4 text-neutral-500">{o.date}</td>
                 <td className="p-4 font-bold">€{o.total}</td>
-                <td className="p-4"><span className={`text-xs px-2 py-1 font-medium ${statusColor(o.status)}`}>{o.status}</span></td>
+                <td className="p-4"><span className={`text-xs px-2 py-1 font-medium ${statusColor(o.status)}`}>{statusLabel(o.status)}</span></td>
                 <td className="p-4"><button className="text-neutral-500 hover:text-neutral-900"><Eye className="w-4 h-4" /></button></td>
               </tr>
             ))}
@@ -309,6 +338,7 @@ const OrdersAdmin: React.FC = () => {
 };
 
 const QuotesAdmin: React.FC = () => {
+  const { t } = useShop();
   const quotes = [
     { id: 'QR-2291', business: 'Hotel', project: 'Custom Inox Kitchen', client: 'Hotel Shkodra', status: 'New', date: '2026-04-16' },
     { id: 'QR-2290', business: 'Bakery', project: 'Bakery Kitchen Equipment', client: 'Panetteria Roma', status: 'In Review', date: '2026-04-15' },
@@ -317,11 +347,19 @@ const QuotesAdmin: React.FC = () => {
   ];
   return (
     <>
-      <h1 className="text-3xl font-light mb-6">Quote Requests</h1>
+      <h1 className="text-3xl font-light mb-6">{t.admin.quotes.title}</h1>
       <div className="bg-white border border-neutral-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
-            <tr><th className="text-left p-4">ID</th><th className="text-left p-4">CLIENT</th><th className="text-left p-4">BUSINESS</th><th className="text-left p-4">PROJECT</th><th className="text-left p-4">DATE</th><th className="text-left p-4">STATUS</th><th className="p-4"></th></tr>
+            <tr>
+              <th className="text-left p-4">{t.admin.quotes.id.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.quotes.client.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.quotes.business.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.quotes.project.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.quotes.date.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.quotes.status.toUpperCase()}</th>
+              <th className="p-4"></th>
+            </tr>
           </thead>
           <tbody>
             {quotes.map((q) => (
@@ -333,7 +371,11 @@ const QuotesAdmin: React.FC = () => {
                 <td className="p-4 text-neutral-500">{q.date}</td>
                 <td className="p-4">
                   <select defaultValue={q.status} className="text-xs border border-neutral-300 px-2 py-1">
-                    <option>New</option><option>In Review</option><option>Offer Sent</option><option>Converted</option><option>Rejected</option>
+                    <option value="New">{t.admin.quotes.new}</option>
+                    <option value="In Review">{t.admin.quotes.inReview}</option>
+                    <option value="Offer Sent">{t.admin.quotes.offerSent}</option>
+                    <option value="Converted">{t.admin.quotes.converted}</option>
+                    <option value="Rejected">{t.admin.quotes.rejected}</option>
                   </select>
                 </td>
                 <td className="p-4 flex gap-2">
@@ -350,6 +392,7 @@ const QuotesAdmin: React.FC = () => {
 };
 
 const UsersAdmin: React.FC = () => {
+  const { t } = useShop();
   const users = [
     { name: 'Admin User', email: 'admin@kitchenmfg.com', role: 'Super Admin', status: 'Active' },
     { name: 'Elena Dervishi', email: 'elena@kitchenmfg.com', role: 'Admin', status: 'Active' },
@@ -361,13 +404,21 @@ const UsersAdmin: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-light">Users & Roles</h1>
-        <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2"><Plus className="w-4 h-4" /> ADD USER</button>
+        <h1 className="text-3xl font-light">{t.admin.users.title}</h1>
+        <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2">
+          <Plus className="w-4 h-4" /> {t.admin.users.addUser.toUpperCase()}
+        </button>
       </div>
       <div className="bg-white border border-neutral-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-neutral-50 border-b border-neutral-200 text-xs tracking-wider text-neutral-500">
-            <tr><th className="text-left p-4">USER</th><th className="text-left p-4">EMAIL</th><th className="text-left p-4">ROLE</th><th className="text-left p-4">STATUS</th><th className="p-4"></th></tr>
+            <tr>
+              <th className="text-left p-4">{t.admin.users.user.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.users.email.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.users.role.toUpperCase()}</th>
+              <th className="text-left p-4">{t.admin.users.status.toUpperCase()}</th>
+              <th className="p-4"></th>
+            </tr>
           </thead>
           <tbody>
             {users.map((u) => (
@@ -378,7 +429,11 @@ const UsersAdmin: React.FC = () => {
                 </td>
                 <td className="p-4 text-neutral-500">{u.email}</td>
                 <td className="p-4"><span className="text-xs bg-neutral-100 px-2 py-1 font-medium">{u.role}</span></td>
-                <td className="p-4"><span className={`text-xs px-2 py-1 font-medium ${u.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{u.status}</span></td>
+                <td className="p-4">
+                  <span className={`text-xs px-2 py-1 font-medium ${u.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {u.status === 'Active' ? t.admin.users.active : t.admin.users.suspended}
+                  </span>
+                </td>
                 <td className="p-4 flex gap-2">
                   <button className="text-neutral-500 hover:text-neutral-900"><Edit className="w-4 h-4" /></button>
                   <button className="text-neutral-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
@@ -392,7 +447,7 @@ const UsersAdmin: React.FC = () => {
         {['Super Admin', 'Admin', 'Manager', 'Product Manager', 'Sales Manager', 'Order Manager', 'Staff'].map((r) => (
           <div key={r} className="bg-white border border-neutral-200 p-4">
             <div className="font-bold text-sm mb-1">{r}</div>
-            <div className="text-xs text-neutral-500">Permissions: Products, Orders, Quotes, Analytics</div>
+            <div className="text-xs text-neutral-500">{t.admin.users.permissions}</div>
           </div>
         ))}
       </div>
@@ -401,41 +456,42 @@ const UsersAdmin: React.FC = () => {
 };
 
 const SettingsAdmin: React.FC = () => {
+  const { t } = useShop();
   const [tab, setTab] = useState('company');
   const tabs = [
-    { id: 'company', label: 'Company' },
-    { id: 'shipping', label: 'Shipping & Tax' },
-    { id: 'payments', label: 'Payments' },
-    { id: 'homepage', label: 'Homepage' },
-    { id: 'seo', label: 'SEO & Social' },
+    { id: 'company', label: t.admin.settings.company },
+    { id: 'shipping', label: t.admin.settings.shipping },
+    { id: 'payments', label: t.admin.settings.payments },
+    { id: 'homepage', label: t.admin.settings.homepage },
+    { id: 'seo', label: t.admin.settings.seoSocial },
   ];
   return (
     <>
-      <h1 className="text-3xl font-light mb-6">Settings</h1>
+      <h1 className="text-3xl font-light mb-6">{t.admin.settings.title}</h1>
       <div className="flex gap-2 mb-6 border-b border-neutral-200 overflow-x-auto">
-        {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-3 text-xs font-bold tracking-[0.15em] border-b-2 whitespace-nowrap transition ${tab === t.id ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>
-            {t.label.toUpperCase()}
+        {tabs.map((tb) => (
+          <button key={tb.id} onClick={() => setTab(tb.id)} className={`px-4 py-3 text-xs font-bold tracking-[0.15em] border-b-2 whitespace-nowrap transition ${tab === tb.id ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-500 hover:text-neutral-900'}`}>
+            {tb.label.toUpperCase()}
           </button>
         ))}
       </div>
       <div className="bg-white border border-neutral-200 p-6 max-w-3xl">
         {tab === 'company' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-1">COMPANY NAME</label><input defaultValue="Kitchen Industrial Manufacturing" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">EMAIL</label><input defaultValue="info@jasin-metal.com" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">PHONE</label><input defaultValue="+383 49 308 338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">WHATSAPP</label><input defaultValue="+38349308338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">ADDRESS</label><textarea rows={3} defaultValue="Kosovë, Prizren, Lubizhde, rruga: Tranziti Vjeter" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">LANGUAGES</label><div className="flex gap-2"><span className="px-3 py-1 bg-neutral-900 text-white text-xs">English</span><span className="px-3 py-1 bg-neutral-900 text-white text-xs">Albanian</span><button className="px-3 py-1 border border-dashed border-neutral-400 text-xs text-neutral-500">+ Add</button></div></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.companyName.toUpperCase()}</label><input defaultValue="Kitchen Industrial Manufacturing" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.email.toUpperCase()}</label><input defaultValue="info@jasin-metal.com" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.phone.toUpperCase()}</label><input defaultValue="+383 49 308 338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.whatsapp.toUpperCase()}</label><input defaultValue="+38349308338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.address.toUpperCase()}</label><textarea rows={3} defaultValue="Kosovë, Prizren, Lubizhde, rruga: Tranziti Vjeter" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.languages.toUpperCase()}</label><div className="flex gap-2"><span className="px-3 py-1 bg-neutral-900 text-white text-xs">English</span><span className="px-3 py-1 bg-neutral-900 text-white text-xs">Albanian</span><button className="px-3 py-1 border border-dashed border-neutral-400 text-xs text-neutral-500">{t.admin.settings.addLanguage}</button></div></div>
           </div>
         )}
         {tab === 'shipping' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-1">FREE SHIPPING THRESHOLD</label><input defaultValue="500" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">STANDARD SHIPPING RATE</label><input defaultValue="25" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">VAT %</label><input defaultValue="20" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">DELIVERY ZONES</label><div className="space-y-2">{['Albania', 'Kosovo', 'North Macedonia', 'Italy', 'Greece'].map((z) => <div key={z} className="flex items-center gap-2"><input type="checkbox" defaultChecked /> {z}</div>)}</div></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.freeShippingThreshold.toUpperCase()}</label><input defaultValue="500" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.standardShippingRate.toUpperCase()}</label><input defaultValue="25" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.vat.toUpperCase()}</label><input defaultValue="20" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.deliveryZones.toUpperCase()}</label><div className="space-y-2">{['Albania', 'Kosovo', 'North Macedonia', 'Italy', 'Greece'].map((z) => <div key={z} className="flex items-center gap-2"><input type="checkbox" defaultChecked /> {z}</div>)}</div></div>
           </div>
         )}
         {tab === 'payments' && (
@@ -443,20 +499,20 @@ const SettingsAdmin: React.FC = () => {
         )}
         {tab === 'homepage' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-2">HOMEPAGE SLIDER IMAGES</label><div className="grid grid-cols-4 gap-2">{[1,2,3,4].map((i) => <div key={i} className="aspect-video bg-neutral-100 border border-neutral-200"></div>)}</div></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-2">FEATURED CATEGORIES</label><div className="text-sm text-neutral-500">{CATEGORIES.slice(0, 5).map((c) => c.name.en).join(', ')}</div></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-2">FEATURED PRODUCTS</label><div className="text-sm text-neutral-500">8 products selected</div></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-2">{t.admin.settings.homepageSlider.toUpperCase()}</label><div className="grid grid-cols-4 gap-2">{[1,2,3,4].map((i) => <div key={i} className="aspect-video bg-neutral-100 border border-neutral-200"></div>)}</div></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-2">{t.admin.settings.featuredCategoriesLabel.toUpperCase()}</label><div className="text-sm text-neutral-500">{CATEGORIES.slice(0, 5).map((c) => c.name.en).join(', ')}</div></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-2">{t.admin.settings.featuredProductsLabel.toUpperCase()}</label><div className="text-sm text-neutral-500">{t.admin.settings.featuredProducts}</div></div>
           </div>
         )}
         {tab === 'seo' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-1">META TITLE</label><input defaultValue="Kitchen Industrial MFG — Premium Stainless Steel Solutions" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
-            <div><label className="text-xs font-bold tracking-wider block mb-1">META DESCRIPTION</label><textarea rows={3} defaultValue="Precision inox manufacturing for professional kitchens, hotels, restaurants, bakeries and butchers." className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.metaTitle.toUpperCase()}</label><input defaultValue="Kitchen Industrial MFG — Premium Stainless Steel Solutions" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.metaDescription.toUpperCase()}</label><textarea rows={3} defaultValue="Precision inox manufacturing for professional kitchens, hotels, restaurants, bakeries and butchers." className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">INSTAGRAM</label><input defaultValue="https://instagram.com/kitchenmfg" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">FACEBOOK</label><input defaultValue="https://facebook.com/kitchenmfg" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
           </div>
         )}
-        <button className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] mt-6 hover:bg-neutral-700">SAVE CHANGES</button>
+        <button className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] mt-6 hover:bg-neutral-700">{t.admin.settings.saveChanges.toUpperCase()}</button>
       </div>
     </>
   );
