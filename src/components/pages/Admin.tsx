@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { useShop } from '@/contexts/ShopContext';
 import { PRODUCTS, CATEGORIES } from '@/lib/data';
-import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut } from 'lucide-react';
 
-const Admin: React.FC = () => {
+type Section = 'dashboard' | 'products' | 'orders' | 'quotes' | 'users' | 'settings';
+
+interface AdminProps {
+  onLogout?: () => void;
+}
+
+const Admin: React.FC<AdminProps> = ({ onLogout }) => {
   const { navigate } = useShop();
-  const [section, setSection] = useState<'dashboard' | 'products' | 'orders' | 'quotes' | 'users' | 'settings'>('dashboard');
+  const [section, setSection] = useState<Section>('dashboard');
 
-  const nav = [
+  const nav: { id: Section; label: string; icon: React.FC<{ className?: string }> }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'products', label: 'Products', icon: Package },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
@@ -20,17 +26,21 @@ const Admin: React.FC = () => {
     <div className="min-h-screen bg-neutral-50 -mt-0">
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-neutral-950 text-neutral-300 min-h-screen p-6 hidden md:block">
-          <button onClick={() => navigate({ name: 'home' })} className="flex items-center gap-2 text-xs tracking-[0.2em] text-neutral-500 hover:text-white mb-8">
-            <ArrowLeft className="w-3 h-3" /> BACK TO STORE
-          </button>
+        <aside className="w-64 bg-neutral-950 text-neutral-300 min-h-screen p-6 hidden md:flex flex-col">
+          {onLogout ? (
+            <div className="mb-8" />
+          ) : (
+            <button onClick={() => navigate({ name: 'home' })} className="flex items-center gap-2 text-xs tracking-[0.2em] text-neutral-500 hover:text-white mb-8">
+              <ArrowLeft className="w-3 h-3" /> BACK TO STORE
+            </button>
+          )}
           <div className="mb-10">
             <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-1">ADMIN PANEL</div>
             <div className="text-xl font-light text-white">Kitchen MFG.</div>
           </div>
-          <nav className="space-y-1">
+          <nav className="space-y-1 flex-1">
             {nav.map((n) => (
-              <button key={n.id} onClick={() => setSection(n.id as any)}
+              <button key={n.id} onClick={() => setSection(n.id)}
                 className={`w-full text-left flex items-center gap-3 px-4 py-3 text-sm transition ${section === n.id ? 'bg-white/10 text-white' : 'text-neutral-400 hover:bg-white/5 hover:text-white'}`}>
                 <n.icon className="w-4 h-4" /> {n.label}
               </button>
@@ -38,13 +48,21 @@ const Admin: React.FC = () => {
           </nav>
           <div className="mt-10 pt-6 border-t border-neutral-800">
             <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-3">SIGNED IN AS</div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-neutral-400 to-neutral-700 rounded-full flex items-center justify-center font-bold text-white">A</div>
               <div>
                 <div className="text-sm text-white">Admin User</div>
                 <div className="text-[10px] text-neutral-500">Super Admin</div>
               </div>
             </div>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs tracking-[0.15em] text-neutral-400 hover:text-red-400 hover:bg-red-900/20 transition"
+              >
+                <LogOut className="w-3.5 h-3.5" /> LOGOUT
+              </button>
+            )}
           </div>
         </aside>
 
@@ -52,7 +70,7 @@ const Admin: React.FC = () => {
         <div className="md:hidden w-full bg-neutral-950 p-4 overflow-x-auto">
           <div className="flex gap-2">
             {nav.map((n) => (
-              <button key={n.id} onClick={() => setSection(n.id as any)} className={`px-3 py-2 text-xs font-bold whitespace-nowrap ${section === n.id ? 'bg-white text-neutral-900' : 'text-neutral-400'}`}>
+              <button key={n.id} onClick={() => setSection(n.id)} className={`px-3 py-2 text-xs font-bold whitespace-nowrap ${section === n.id ? 'bg-white text-neutral-900' : 'text-neutral-400'}`}>
                 {n.label}
               </button>
             ))}
