@@ -57,14 +57,8 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div className="col-span-2 md:col-span-1">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-neutral-100 via-neutral-400 to-neutral-100 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-neutral-900 rotate-45"></div>
-            </div>
-            <div>
-              <div className="font-black text-sm tracking-[0.2em] text-white leading-none">JASIN</div>
-              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">METAL</div>
-            </div>
+          <div className="flex items-center mb-4">
+            <img src="/jasin-logo.png" alt="JASIN METAL" className="h-12 w-auto" />
           </div>
           <p className="text-sm text-neutral-500 leading-relaxed mb-6">{t.footer.tagline}</p>
           <div className="flex gap-2">

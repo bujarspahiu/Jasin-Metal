@@ -81,11 +81,8 @@ const AuthModal: React.FC<Props> = ({ open, onClose, initialMode = 'login' }) =>
           <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-neutral-100" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 bg-gradient-to-br from-neutral-900 via-neutral-700 to-neutral-900 flex items-center justify-center">
-              <div className="w-5 h-5 border-2 border-neutral-300 rotate-45"></div>
-            </div>
-            <div className="text-[10px] tracking-[0.3em] text-neutral-500">JASIN METAL</div>
+          <div className="flex items-center mb-4">
+            <img src="/jasin-logo.png" alt="JASIN METAL" className="h-10 w-auto" />
           </div>
           <h2 className="text-2xl font-light tracking-tight">
             {mode === 'login' && 'Welcome back'}

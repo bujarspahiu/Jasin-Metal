@@ -39,6 +39,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
             </button>
           )}
           <div className="mb-10">
+            <img src="/jasin-logo.png" alt="JASIN METAL" className="h-12 w-auto mb-3" />
             <div className="text-[10px] tracking-[0.3em] text-neutral-500 mb-1">{t.admin.panel.adminPanel}</div>
             <div className="text-xl font-light text-white">{t.admin.panel.kitchenMfg}</div>
           </div>
@@ -488,8 +489,10 @@ const ProductAddModal: React.FC<{
   const [errors, setErrors] = useState<Partial<Record<keyof AddDraft, string>>>({});
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const set = (field: keyof AddDraft, value: string | boolean) =>
+  const set = (field: keyof AddDraft, value: string | boolean) => {
     setDraft((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => { const next = { ...prev }; delete next[field]; return next; });
+  };
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -502,13 +505,14 @@ const ProductAddModal: React.FC<{
 
   const validate = (): boolean => {
     const errs: Partial<Record<keyof AddDraft, string>> = {};
-    if (!draft.nameEn.trim()) errs.nameEn = 'Required';
-    if (!draft.nameSq.trim()) errs.nameSq = 'Required';
-    if (!draft.sku.trim()) errs.sku = 'Required';
-    if (!draft.category) errs.category = 'Required';
-    if (!imagePreview) setImageError('Foto është e detyrueshme');
+    if (!draft.nameEn.trim()) errs.nameEn = 'E detyrueshme';
+    if (!draft.nameSq.trim()) errs.nameSq = 'E detyrueshme';
+    if (!draft.sku.trim()) errs.sku = 'E detyrueshme';
+    if (!draft.category) errs.category = 'E detyrueshme';
+    const imgOk = !!imagePreview;
+    if (!imgOk) setImageError('Foto është e detyrueshme');
     setErrors(errs);
-    return Object.keys(errs).length === 0 && !!imagePreview;
+    return Object.keys(errs).length === 0 && imgOk;
   };
 
   const handleAdd = () => {
@@ -558,7 +562,7 @@ const ProductAddModal: React.FC<{
             <label className={labelCls}>FOTO E PRODUKTIT *</label>
             <div
               className={`border-2 border-dashed cursor-pointer transition flex flex-col items-center justify-center rounded-none overflow-hidden
-                ${errors.specEn ? 'border-red-400 bg-red-50' : 'border-neutral-300 hover:border-neutral-500 bg-neutral-50'}`}
+                ${imageError ? 'border-red-400 bg-red-50' : 'border-neutral-300 hover:border-neutral-500 bg-neutral-50'}`}
               style={{ minHeight: '160px' }}
               onClick={() => fileRef.current?.click()}
             >

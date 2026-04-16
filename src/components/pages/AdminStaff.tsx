@@ -77,12 +77,8 @@ const StaffLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-neutral-300 via-white to-neutral-400 mb-6">
-            <div className="w-8 h-8 border-2 border-neutral-900 rotate-45" />
-          </div>
-          <div className="text-[10px] tracking-[0.4em] text-neutral-500 mb-1">STAFF ACCESS</div>
-          <div className="text-xl font-bold text-white tracking-[0.15em]">JASIN</div>
-          <div className="text-[10px] tracking-[0.3em] text-neutral-400">METAL</div>
+          <img src="/jasin-logo.png" alt="JASIN METAL" className="h-20 w-auto mx-auto mb-4" />
+          <div className="text-[10px] tracking-[0.4em] text-neutral-500">STAFF ACCESS</div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">

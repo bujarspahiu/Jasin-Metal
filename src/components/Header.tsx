@@ -64,14 +64,8 @@ const Header: React.FC = () => {
         {/* Main nav */}
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center gap-8">
           {/* Logo */}
-          <button onClick={() => navigate({ name: 'home' })} className="flex items-center gap-2 group shrink-0">
-            <div className="w-10 h-10 bg-gradient-to-br from-neutral-900 via-neutral-700 to-neutral-900 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-neutral-300 rotate-45"></div>
-            </div>
-            <div className="text-left">
-              <div className="font-black text-sm tracking-[0.2em] text-neutral-900 leading-none">JASIN</div>
-              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">METAL</div>
-            </div>
+          <button onClick={() => navigate({ name: 'home' })} className="flex items-center shrink-0">
+            <img src="/jasin-logo.png" alt="JASIN METAL" className="h-12 w-auto" />
           </button>
 
           {/* Desktop nav */}
