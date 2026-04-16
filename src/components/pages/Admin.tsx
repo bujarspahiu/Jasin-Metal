@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useShop } from '@/contexts/ShopContext';
 import { PRODUCTS, CATEGORIES, Product } from '@/lib/data';
-import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut, X, Check, Star } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut, X, Check, Star, Upload, ImageIcon } from 'lucide-react';
 
 const STAFF_PASS_KEY = 'staff_password';
 const getStoredPass = () => localStorage.getItem(STAFF_PASS_KEY) || 'admin';
@@ -450,15 +450,285 @@ const ProductEditModal: React.FC<{
   );
 };
 
+interface AddDraft {
+  nameEn: string;
+  nameSq: string;
+  sku: string;
+  price: string;
+  stock: string;
+  material: string;
+  dimensions: string;
+  specEn: string;
+  specSq: string;
+  descEn: string;
+  descSq: string;
+  category: string;
+  type: Product['type'];
+  featured: boolean;
+  bestSeller: boolean;
+  newArrival: boolean;
+}
+
+const emptyAddDraft = (): AddDraft => ({
+  nameEn: '', nameSq: '', sku: '', price: '', stock: '0',
+  material: 'AISI 304', dimensions: '', specEn: '', specSq: '',
+  descEn: '', descSq: '',
+  category: CATEGORIES[0].id, type: 'direct',
+  featured: false, bestSeller: false, newArrival: false,
+});
+
+const ProductAddModal: React.FC<{
+  onClose: () => void;
+  onAdd: (p: Product) => void;
+}> = ({ onClose, onAdd }) => {
+  const [draft, setDraft] = useState<AddDraft>(emptyAddDraft);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [imageError, setImageError] = useState<string>('');
+  const [errors, setErrors] = useState<Partial<Record<keyof AddDraft, string>>>({});
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const set = (field: keyof AddDraft, value: string | boolean) =>
+    setDraft((prev) => ({ ...prev, [field]: value }));
+
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageError('');
+    const reader = new FileReader();
+    reader.onload = (ev) => setImagePreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const validate = (): boolean => {
+    const errs: Partial<Record<keyof AddDraft, string>> = {};
+    if (!draft.nameEn.trim()) errs.nameEn = 'Required';
+    if (!draft.nameSq.trim()) errs.nameSq = 'Required';
+    if (!draft.sku.trim()) errs.sku = 'Required';
+    if (!draft.category) errs.category = 'Required';
+    if (!imagePreview) setImageError('Foto është e detyrueshme');
+    setErrors(errs);
+    return Object.keys(errs).length === 0 && !!imagePreview;
+  };
+
+  const handleAdd = () => {
+    if (!validate()) return;
+    const priceVal = draft.price.trim() === '' ? null : parseFloat(draft.price);
+    const newProduct: Product = {
+      id: `p_${Date.now()}`,
+      name: { en: draft.nameEn.trim(), sq: draft.nameSq.trim() },
+      category: draft.category,
+      price: priceVal === null || Number.isNaN(priceVal) ? null : priceVal,
+      image: imagePreview,
+      spec: { en: draft.specEn.trim(), sq: draft.specSq.trim() },
+      material: draft.material.trim(),
+      dimensions: draft.dimensions.trim(),
+      sku: draft.sku.trim().toUpperCase(),
+      stock: parseInt(draft.stock) || 0,
+      featured: draft.featured,
+      bestSeller: draft.bestSeller,
+      newArrival: draft.newArrival,
+      type: draft.type,
+    };
+    onAdd(newProduct);
+    onClose();
+  };
+
+  const inputCls = 'w-full border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900 transition';
+  const labelCls = 'block text-[10px] tracking-[0.15em] text-neutral-500 mb-1';
+  const errCls = 'text-[10px] text-red-600 mt-0.5';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div
+        className="relative bg-white max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
+          <div className="text-xs font-bold tracking-[0.2em] text-neutral-500">SHTO PRODUKT TË RI</div>
+          <button onClick={onClose} className="text-neutral-400 hover:text-neutral-900 transition">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {/* Photo Upload */}
+          <div>
+            <label className={labelCls}>FOTO E PRODUKTIT *</label>
+            <div
+              className={`border-2 border-dashed cursor-pointer transition flex flex-col items-center justify-center rounded-none overflow-hidden
+                ${errors.specEn ? 'border-red-400 bg-red-50' : 'border-neutral-300 hover:border-neutral-500 bg-neutral-50'}`}
+              style={{ minHeight: '160px' }}
+              onClick={() => fileRef.current?.click()}
+            >
+              {imagePreview ? (
+                <img src={imagePreview} alt="preview" className="max-h-48 object-contain p-2" />
+              ) : (
+                <div className="flex flex-col items-center gap-2 py-8 text-neutral-400">
+                  <ImageIcon className="w-10 h-10" />
+                  <div className="text-xs tracking-[0.15em]">KLIKO PËR TË NGARKUAR FOTO</div>
+                  <div className="text-[10px] text-neutral-400">PNG, JPG, WEBP — max 5 MB</div>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImage}
+            />
+            {imagePreview && (
+              <button
+                type="button"
+                className="mt-1.5 flex items-center gap-1.5 text-[10px] text-neutral-500 hover:text-neutral-900 tracking-[0.15em]"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Upload className="w-3 h-3" /> NDRYSHO FOTON
+              </button>
+            )}
+            {imageError && <div className={errCls}>{imageError}</div>}
+          </div>
+
+          {/* Names */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>EMRI (ANGLISHT) *</label>
+              <input className={inputCls} value={draft.nameEn} onChange={(e) => set('nameEn', e.target.value)} placeholder="Professional Sink 1200mm" />
+              {errors.nameEn && <div className={errCls}>{errors.nameEn}</div>}
+            </div>
+            <div>
+              <label className={labelCls}>EMRI (SHQIP) *</label>
+              <input className={inputCls} value={draft.nameSq} onChange={(e) => set('nameSq', e.target.value)} placeholder="Lavaman Profesional 1200mm" />
+              {errors.nameSq && <div className={errCls}>{errors.nameSq}</div>}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>PËRSHKRIM (ANGLISHT)</label>
+              <textarea
+                className={`${inputCls} resize-none`}
+                rows={3}
+                value={draft.descEn}
+                onChange={(e) => set('descEn', e.target.value)}
+                placeholder="Short product description in English..."
+              />
+            </div>
+            <div>
+              <label className={labelCls}>PËRSHKRIM (SHQIP)</label>
+              <textarea
+                className={`${inputCls} resize-none`}
+                rows={3}
+                value={draft.descSq}
+                onChange={(e) => set('descSq', e.target.value)}
+                placeholder="Përshkrim i shkurtër i produktit shqip..."
+              />
+            </div>
+          </div>
+
+          {/* SKU, Price, Stock, Type */}
+          <div className="grid grid-cols-4 gap-3">
+            <div>
+              <label className={labelCls}>SKU *</label>
+              <input className={inputCls} value={draft.sku} onChange={(e) => set('sku', e.target.value)} placeholder="SNK-001" />
+              {errors.sku && <div className={errCls}>{errors.sku}</div>}
+            </div>
+            <div>
+              <label className={labelCls}>ÇMIMI (€) — bosh = Ofertë</label>
+              <input className={inputCls} type="number" min="0" step="0.01" value={draft.price} onChange={(e) => set('price', e.target.value)} placeholder="0.00" />
+            </div>
+            <div>
+              <label className={labelCls}>STOKU (copë)</label>
+              <input className={inputCls} type="number" min="0" value={draft.stock} onChange={(e) => set('stock', e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>TIPI</label>
+              <select className={inputCls} value={draft.type} onChange={(e) => set('type', e.target.value as Product['type'])}>
+                {PRODUCT_TYPES.map((tp) => <option key={tp} value={tp}>{tp}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Category & Material */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>KATEGORIA *</label>
+              <select className={inputCls} value={draft.category} onChange={(e) => set('category', e.target.value)}>
+                {PRODUCT_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              {errors.category && <div className={errCls}>{errors.category}</div>}
+            </div>
+            <div>
+              <label className={labelCls}>MATERIALI</label>
+              <input className={inputCls} value={draft.material} onChange={(e) => set('material', e.target.value)} placeholder="AISI 304" />
+            </div>
+          </div>
+
+          {/* Dimensions */}
+          <div>
+            <label className={labelCls}>DIMENSIONET</label>
+            <input className={inputCls} value={draft.dimensions} onChange={(e) => set('dimensions', e.target.value)} placeholder="1200 × 600 × 900mm" />
+          </div>
+
+          {/* Spec */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>SPECIFIKIME (ANGLISHT)</label>
+              <input className={inputCls} value={draft.specEn} onChange={(e) => set('specEn', e.target.value)} placeholder="AISI 304 · 1.2mm · 1200×600mm" />
+            </div>
+            <div>
+              <label className={labelCls}>SPECIFIKIME (SHQIP)</label>
+              <input className={inputCls} value={draft.specSq} onChange={(e) => set('specSq', e.target.value)} placeholder="AISI 304 · 1.2mm · 1200×600mm" />
+            </div>
+          </div>
+
+          {/* Flags */}
+          <div className="flex gap-6 pt-1">
+            {(['featured', 'bestSeller', 'newArrival'] as const).map((flag) => (
+              <label key={flag} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={draft[flag]}
+                  onChange={(e) => set(flag, e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <span className="text-xs font-bold tracking-[0.1em] text-neutral-700">
+                  {flag === 'featured' ? 'FEATURED' : flag === 'bestSeller' ? 'BEST SELLER' : 'NEW ARRIVAL'}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 px-6 py-4 border-t border-neutral-200">
+          <button onClick={onClose} className="px-5 py-2.5 text-xs font-bold tracking-[0.15em] border border-neutral-300 hover:border-neutral-900 transition">
+            ANULO
+          </button>
+          <button onClick={handleAdd} className="px-5 py-2.5 text-xs font-bold tracking-[0.15em] bg-neutral-900 text-white hover:bg-neutral-700 transition flex items-center gap-2">
+            <Plus className="w-3.5 h-3.5" /> SHTO PRODUKTIN
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProductsAdmin: React.FC = () => {
   const { t } = useShop();
   const [products, setProducts] = useState<Product[]>(() => [...PRODUCTS]);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
 
   const handleSave = (updated: Product) => {
     setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  };
+
+  const handleAdd = (newProduct: Product) => {
+    setProducts((prev) => [newProduct, ...prev]);
   };
 
   const handleDelete = (id: string) => {
@@ -468,6 +738,9 @@ const ProductsAdmin: React.FC = () => {
 
   return (
     <>
+      {addOpen && (
+        <ProductAddModal onClose={() => setAddOpen(false)} onAdd={handleAdd} />
+      )}
       {viewProduct && (
         <ProductViewModal product={viewProduct} onClose={() => setViewProduct(null)} />
       )}
@@ -480,7 +753,10 @@ const ProductsAdmin: React.FC = () => {
       )}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-light">{t.admin.products.title}</h1>
-        <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2 hover:bg-neutral-700">
+        <button
+          onClick={() => setAddOpen(true)}
+          className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2 hover:bg-neutral-700 transition"
+        >
           <Plus className="w-4 h-4" /> {t.admin.products.addProduct.toUpperCase()}
         </button>
       </div>
