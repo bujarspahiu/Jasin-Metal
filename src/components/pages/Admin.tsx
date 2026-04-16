@@ -216,7 +216,7 @@ const Dashboard: React.FC = () => {
 };
 
 const PRODUCT_TYPES: Product['type'][] = ['direct', 'quote', 'custom'];
-const PRODUCT_CATEGORIES = ['cutlery', 'serving', 'shelves', 'sinks', 'equipment', 'bakery', 'butcher'];
+const PRODUCT_CATEGORIES = CATEGORIES.map((c) => c.id);
 
 interface EditDraft {
   nameEn: string;
@@ -253,7 +253,7 @@ const toEditDraft = (p: Product): EditDraft => ({
 const applyDraft = (p: Product, d: EditDraft): Product => ({
   ...p,
   name: { en: d.nameEn.trim() || p.name.en, sq: d.nameSq.trim() || p.name.sq },
-  price: d.price.trim() === '' ? null : parseFloat(d.price) || null,
+  price: (() => { const n = parseFloat(d.price); return d.price.trim() === '' || Number.isNaN(n) ? null : n; })(),
   stock: parseInt(d.stock) || 0,
   material: d.material.trim(),
   dimensions: d.dimensions.trim(),
@@ -281,6 +281,7 @@ const ProductViewModal: React.FC<{ product: Product; onClose: () => void }> = ({
       <div className="p-6 space-y-5">
         <div className="flex gap-5 items-start">
           <img src={p.image} alt={p.name.en} className="w-24 h-24 object-contain bg-neutral-50 border border-neutral-100 p-2 flex-shrink-0" />
+
           <div className="flex-1 min-w-0">
             <div className="font-bold text-lg leading-tight mb-0.5">{p.name.en}</div>
             <div className="text-sm text-neutral-500 mb-2">{p.name.sq}</div>
@@ -325,6 +326,14 @@ const ProductViewModal: React.FC<{ product: Product; onClose: () => void }> = ({
             <div>{p.spec.sq}</div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-end px-6 py-4 border-t border-neutral-200">
+        <button
+          onClick={onClose}
+          className="px-5 py-2.5 text-xs font-bold tracking-[0.15em] border border-neutral-300 hover:border-neutral-900 transition"
+        >
+          CLOSE
+        </button>
       </div>
     </div>
   </div>
