@@ -47,10 +47,10 @@ echo ""
 echo "[3/3] Nisja e serverit me pm2..."
 
 if pm2 describe jasin-metal > /dev/null 2>&1; then
-  pm2 restart jasin-metal --update-env
+  pm2 restart jasin-metal --env production --update-env
   echo "      Aplikacioni u ristart."
 else
-  pm2 start ecosystem.config.cjs
+  pm2 start ecosystem.config.cjs --env production
   echo "      Aplikacioni u nis."
 fi
 
