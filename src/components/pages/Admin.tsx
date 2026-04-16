@@ -559,7 +559,7 @@ const SettingsAdmin: React.FC = () => {
       <div className="bg-white border border-neutral-200 p-6 max-w-3xl">
         {tab === 'company' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.companyName.toUpperCase()}</label><input defaultValue="Kitchen Industrial Manufacturing" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.companyName.toUpperCase()}</label><input defaultValue="Jasin Metal" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.email.toUpperCase()}</label><input defaultValue="info@jasin-metal.com" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.phone.toUpperCase()}</label><input defaultValue="+383 49 308 338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.whatsapp.toUpperCase()}</label><input defaultValue="+38349308338" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
@@ -587,7 +587,7 @@ const SettingsAdmin: React.FC = () => {
         )}
         {tab === 'seo' && (
           <div className="space-y-4">
-            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.metaTitle.toUpperCase()}</label><input defaultValue="Kitchen Industrial MFG — Premium Stainless Steel Solutions" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
+            <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.metaTitle.toUpperCase()}</label><input defaultValue="Jasin Metal — Premium Stainless Steel Solutions" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">{t.admin.settings.metaDescription.toUpperCase()}</label><textarea rows={3} defaultValue="Precision inox manufacturing for professional kitchens, hotels, restaurants, bakeries and butchers." className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">INSTAGRAM</label><input defaultValue="https://instagram.com/kitchenmfg" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
             <div><label className="text-xs font-bold tracking-wider block mb-1">FACEBOOK</label><input defaultValue="https://facebook.com/kitchenmfg" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>

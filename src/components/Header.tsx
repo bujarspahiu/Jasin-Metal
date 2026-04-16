@@ -69,8 +69,8 @@ const Header: React.FC = () => {
               <div className="w-6 h-6 border-2 border-neutral-300 rotate-45"></div>
             </div>
             <div className="text-left">
-              <div className="font-black text-sm tracking-[0.2em] text-neutral-900 leading-none">KITCHEN</div>
-              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">INDUSTRIAL MFG.</div>
+              <div className="font-black text-sm tracking-[0.2em] text-neutral-900 leading-none">JASIN</div>
+              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">METAL</div>
             </div>
           </button>
 

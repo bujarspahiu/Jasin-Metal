@@ -108,8 +108,8 @@ export const About: React.FC = () => {
         </div>
       </div>
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-20">
-        <p className="text-2xl font-light text-neutral-900 leading-relaxed mb-8">Kitchen Industrial Manufacturing is Albania's leading producer of premium stainless steel products and turnkey professional kitchens.</p>
-        <p className="text-neutral-600 leading-relaxed mb-4">Since 2008 we have engineered bespoke industrial solutions for hotels, restaurants, bakeries, butcher shops and food production facilities across the Balkans and Europe. Our 4,200m² production facility combines CNC precision with traditional craftsmanship — every fork, every shelf, every complete kitchen carries the same standard of excellence.</p>
+        <p className="text-2xl font-light text-neutral-900 leading-relaxed mb-8">Jasin Metal is Kosovo's leading producer of premium stainless steel products and turnkey professional kitchens.</p>
+        <p className="text-neutral-600 leading-relaxed mb-4">Since 2008 we have engineered bespoke industrial solutions for hotels, restaurants, bakeries, butcher shops and food production facilities across the Balkans and Europe. Our 4,200m² production facility in Prizren combines CNC precision with traditional craftsmanship — every fork, every shelf, every complete kitchen carries the same standard of excellence.</p>
         <p className="text-neutral-600 leading-relaxed">From a single piece of cutlery to a complete industrial installation, we deliver engineering, manufacturing, and on-site commissioning under one roof.</p>
       </div>
       <div className="bg-neutral-950 text-white py-16">

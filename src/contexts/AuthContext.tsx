@@ -136,7 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         createdAt: new Date().toISOString(),
       };
       persist(u);
-      toast({ title: 'Signed in', description: 'Welcome to Kitchen Industrial MFG.' });
+      toast({ title: 'Signed in', description: 'Welcome to Jasin Metal.' });
       return true;
     }
     toast({ title: 'Sign in failed', description: 'Invalid credentials.' });

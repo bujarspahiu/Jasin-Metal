@@ -85,7 +85,7 @@ const AuthModal: React.FC<Props> = ({ open, onClose, initialMode = 'login' }) =>
             <div className="w-9 h-9 bg-gradient-to-br from-neutral-900 via-neutral-700 to-neutral-900 flex items-center justify-center">
               <div className="w-5 h-5 border-2 border-neutral-300 rotate-45"></div>
             </div>
-            <div className="text-[10px] tracking-[0.3em] text-neutral-500">KITCHEN INDUSTRIAL MFG.</div>
+            <div className="text-[10px] tracking-[0.3em] text-neutral-500">JASIN METAL</div>
           </div>
           <h2 className="text-2xl font-light tracking-tight">
             {mode === 'login' && 'Welcome back'}

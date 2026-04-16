@@ -64,8 +64,8 @@ const StaffLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
             <div className="w-8 h-8 border-2 border-neutral-900 rotate-45" />
           </div>
           <div className="text-[10px] tracking-[0.4em] text-neutral-500 mb-1">STAFF ACCESS</div>
-          <div className="text-xl font-bold text-white tracking-[0.15em]">KITCHEN</div>
-          <div className="text-[10px] tracking-[0.3em] text-neutral-400">INDUSTRIAL MFG.</div>
+          <div className="text-xl font-bold text-white tracking-[0.15em]">JASIN</div>
+          <div className="text-[10px] tracking-[0.3em] text-neutral-400">METAL</div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">

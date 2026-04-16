@@ -62,8 +62,8 @@ const Footer: React.FC = () => {
               <div className="w-6 h-6 border-2 border-neutral-900 rotate-45"></div>
             </div>
             <div>
-              <div className="font-black text-sm tracking-[0.2em] text-white leading-none">KITCHEN</div>
-              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">INDUSTRIAL MFG.</div>
+              <div className="font-black text-sm tracking-[0.2em] text-white leading-none">JASIN</div>
+              <div className="text-[10px] tracking-[0.3em] text-neutral-500 leading-none mt-0.5">METAL</div>
             </div>
           </div>
           <p className="text-sm text-neutral-500 leading-relaxed mb-6">{t.footer.tagline}</p>
@@ -121,7 +121,7 @@ const Footer: React.FC = () => {
       {/* Bottom */}
       <div className="border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-neutral-500">
-          <div>© {new Date().getFullYear()} Kitchen Industrial Manufacturing. {t.footer.rights}</div>
+          <div>© {new Date().getFullYear()} Jasin Metal. {t.footer.rights}</div>
           <div className="flex gap-5">
             <a href="#" className="hover:text-white">Privacy</a>
             <a href="#" className="hover:text-white">Terms</a>

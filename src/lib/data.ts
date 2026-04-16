@@ -90,7 +90,7 @@ export const TRANSLATIONS = {
     header: { signIn: 'Sign In', signUp: 'Sign Up', myAccount: 'My Account', orders: 'Orders', settings: 'Settings', adminPanel: 'Admin Panel', signOut: 'Sign Out', backToStore: 'Back to Store' },
     admin: {
       nav: { dashboard: 'Dashboard', products: 'Products', orders: 'Orders', quoteRequests: 'Quote Requests', usersRoles: 'Users & Roles', settings: 'Settings' },
-      panel: { adminPanel: 'Admin Panel', signedInAs: 'Signed In As', adminUser: 'Admin User', superAdmin: 'Super Admin', logout: 'Logout', backToStore: 'Back to Store', kitchenMfg: 'Kitchen MFG.' },
+      panel: { adminPanel: 'Admin Panel', signedInAs: 'Signed In As', adminUser: 'Admin User', superAdmin: 'Super Admin', logout: 'Logout', backToStore: 'Back to Store', kitchenMfg: 'Jasin Metal' },
       dashboard: { title: 'Dashboard', welcome: "Welcome back. Here's what's happening today.", last30Days: 'Last 30 days', last7Days: 'Last 7 days', today: 'Today', custom: 'Custom', revenueOverview: 'Revenue Overview', recentOrders: 'Recent Orders', topSellingProducts: 'Top Selling Products', viewAll: 'View all', lowStockAlert: 'Low Stock Alert', lowStockMsg: '3 products are running low: Butcher Prep Station (3 units), Commercial Mixer 40L (4 units), Double Basin Sink (9 units).' },
       stats: { todaySales: 'Today Sales', thisWeek: 'This Week', thisMonth: 'This Month', pendingOrders: 'Pending Orders', new: '4 new' },
       products: { title: 'Products', addProduct: 'Add Product', searchProducts: 'Search products...', allCategories: 'All Categories', product: 'Product', sku: 'SKU', category: 'Category', price: 'Price', stock: 'Stock', status: 'Status', active: 'Active' },
@@ -110,7 +110,7 @@ export const TRANSLATIONS = {
     header: { signIn: 'Hyr', signUp: 'Regjistrohu', myAccount: 'Llogaria Ime', orders: 'Porositë', settings: 'Cilësimet', adminPanel: 'Paneli Admin', signOut: 'Dil', backToStore: 'Kthehu në Dyqan' },
     admin: {
       nav: { dashboard: 'Paneli', products: 'Produktet', orders: 'Porositë', quoteRequests: 'Kërkesat për Ofertë', usersRoles: 'Përdoruesit & Rolet', settings: 'Cilësimet' },
-      panel: { adminPanel: 'PANELI ADMIN', signedInAs: 'I KYÇUR SI', adminUser: 'Përdoruesi Admin', superAdmin: 'Super Admin', logout: 'Dil', backToStore: 'KTHEHU NË DYQAN', kitchenMfg: 'Kitchen MFG.' },
+      panel: { adminPanel: 'PANELI ADMIN', signedInAs: 'I KYÇUR SI', adminUser: 'Përdoruesi Admin', superAdmin: 'Super Admin', logout: 'Dil', backToStore: 'KTHEHU NË DYQAN', kitchenMfg: 'Jasin Metal' },
       dashboard: { title: 'Paneli', welcome: 'Mirësevini. Ja çfarë po ndodh sot.', last30Days: '30 ditët e fundit', last7Days: '7 ditët e fundit', today: 'Sot', custom: 'Me porosi', revenueOverview: 'Pasqyra e të Ardhurave', recentOrders: 'Porositë e Fundit', topSellingProducts: 'Produktet Më të Shitura', viewAll: 'Shiko të gjitha', lowStockAlert: 'Sinjal Stoku të Ulët', lowStockMsg: '3 produkte janë në nivel të ulët: Tavolinë Mishtarie (3 njësi), Mikser Brumi 40L (4 njësi), Lavaman me Dy Vaska (9 njësi).' },
       stats: { todaySales: 'Shitjet Sot', thisWeek: 'Kjo Javë', thisMonth: 'Ky Muaj', pendingOrders: 'Porosi në Pritje', new: '4 të reja' },
       products: { title: 'Produktet', addProduct: 'Shto Produkt', searchProducts: 'Kërko produkte...', allCategories: 'Të gjitha Kategoritë', product: 'Produkti', sku: 'Kodi', category: 'Kategoria', price: 'Çmimi', stock: 'Stoku', status: 'Statusi', active: 'Aktiv' },
