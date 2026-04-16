@@ -721,7 +721,7 @@ const ProductAddModal: React.FC<{
 };
 
 const ProductsAdmin: React.FC = () => {
-  const { t } = useShop();
+  const { t, lang } = useShop();
   const [products, setProducts] = useState<Product[]>(() => [...PRODUCTS]);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -801,20 +801,20 @@ const ProductsAdmin: React.FC = () => {
         >
           <option value="">{t.admin.products.allCategories}</option>
           {CATEGORIES.map((c) => (
-            <option key={c.id} value={c.id}>{c.name.en}</option>
+            <option key={c.id} value={c.id}>{c.name[lang]}</option>
           ))}
         </select>
       </div>
       {(search || categoryFilter) && (
         <div className="flex items-center justify-between mb-3 px-1">
           <span className="text-xs text-neutral-500">
-            {filteredProducts.length} / {products.length} produkteve
+            {filteredProducts.length} / {products.length} {t.admin.products.productsWord}
           </span>
           <button
             onClick={() => { setSearch(''); setCategoryFilter(''); }}
             className="text-xs text-neutral-400 hover:text-neutral-700 tracking-[0.1em]"
           >
-            FSHI FILTRAT
+            {t.admin.products.clearFilters}
           </button>
         </div>
       )}
@@ -835,7 +835,7 @@ const ProductsAdmin: React.FC = () => {
             {filteredProducts.length === 0 ? (
               <tr>
                 <td colSpan={7} className="p-10 text-center text-neutral-400 text-sm">
-                  Nuk u gjet asnjë produkt për "{search || categoryFilter}"
+                  {t.admin.products.noProductsFound} &quot;{search || categoryFilter}&quot;
                 </td>
               </tr>
             ) : null}
