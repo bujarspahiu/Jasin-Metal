@@ -3,6 +3,9 @@ import { useShop } from '@/contexts/ShopContext';
 import { PRODUCTS, CATEGORIES } from '@/lib/data';
 import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut } from 'lucide-react';
 
+const STAFF_PASS_KEY = 'staff_password';
+const getStoredPass = () => localStorage.getItem(STAFF_PASS_KEY) || 'admin';
+
 type Section = 'dashboard' | 'products' | 'orders' | 'quotes' | 'users' | 'settings';
 
 interface AdminProps {
@@ -455,6 +458,83 @@ const UsersAdmin: React.FC = () => {
   );
 };
 
+const ChangePasswordForm: React.FC = () => {
+  const [currentPass, setCurrentPass] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage(null);
+
+    if (currentPass !== getStoredPass()) {
+      setMessage({ type: 'error', text: 'Fjalëkalimi aktual është gabim.' });
+      return;
+    }
+    if (newPass.length < 6) {
+      setMessage({ type: 'error', text: 'Fjalëkalimi i ri duhet të ketë të paktën 6 karaktere.' });
+      return;
+    }
+    if (newPass !== confirmPass) {
+      setMessage({ type: 'error', text: 'Fjalëkalimi i ri dhe konfirmimi nuk përputhen.' });
+      return;
+    }
+
+    localStorage.setItem(STAFF_PASS_KEY, newPass);
+    setCurrentPass('');
+    setNewPass('');
+    setConfirmPass('');
+    setMessage({ type: 'success', text: 'Fjalëkalimi u ndryshua me sukses.' });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="text-xs font-bold tracking-wider block mb-1">FJALËKALIMI AKTUAL</label>
+        <input
+          type="password"
+          required
+          value={currentPass}
+          onChange={(e) => setCurrentPass(e.target.value)}
+          placeholder="••••••••"
+          className="w-full border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-neutral-600"
+        />
+      </div>
+      <div>
+        <label className="text-xs font-bold tracking-wider block mb-1">FJALËKALIMI I RI</label>
+        <input
+          type="password"
+          required
+          value={newPass}
+          onChange={(e) => setNewPass(e.target.value)}
+          placeholder="••••••••"
+          className="w-full border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-neutral-600"
+        />
+      </div>
+      <div>
+        <label className="text-xs font-bold tracking-wider block mb-1">KONFIRMO FJALËKALIMIN E RI</label>
+        <input
+          type="password"
+          required
+          value={confirmPass}
+          onChange={(e) => setConfirmPass(e.target.value)}
+          placeholder="••••••••"
+          className="w-full border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-neutral-600"
+        />
+      </div>
+      {message && (
+        <div className={`px-4 py-3 text-xs ${message.type === 'success' ? 'bg-green-50 border border-green-300 text-green-800' : 'bg-red-50 border border-red-300 text-red-800'}`}>
+          {message.text}
+        </div>
+      )}
+      <button type="submit" className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] hover:bg-neutral-700">
+        NDRYSHO FJALËKALIMIN
+      </button>
+    </form>
+  );
+};
+
 const SettingsAdmin: React.FC = () => {
   const { t } = useShop();
   const [tab, setTab] = useState('company');
@@ -464,6 +544,7 @@ const SettingsAdmin: React.FC = () => {
     { id: 'payments', label: t.admin.settings.payments },
     { id: 'homepage', label: t.admin.settings.homepage },
     { id: 'seo', label: t.admin.settings.seoSocial },
+    { id: 'security', label: 'Security' },
   ];
   return (
     <>
@@ -512,7 +593,15 @@ const SettingsAdmin: React.FC = () => {
             <div><label className="text-xs font-bold tracking-wider block mb-1">FACEBOOK</label><input defaultValue="https://facebook.com/kitchenmfg" className="w-full border border-neutral-300 px-4 py-2.5 text-sm" /></div>
           </div>
         )}
-        <button className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] mt-6 hover:bg-neutral-700">{t.admin.settings.saveChanges.toUpperCase()}</button>
+        {tab === 'security' && (
+          <div>
+            <h2 className="text-sm font-bold tracking-wider mb-4">NDRYSHO FJALËKALIMIN</h2>
+            <ChangePasswordForm />
+          </div>
+        )}
+        {tab !== 'security' && (
+          <button className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] mt-6 hover:bg-neutral-700">{t.admin.settings.saveChanges.toUpperCase()}</button>
+        )}
       </div>
     </>
   );

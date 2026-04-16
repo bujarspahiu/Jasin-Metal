@@ -5,8 +5,9 @@ import Admin from '@/components/pages/Admin';
 import { Lock } from 'lucide-react';
 
 const SESSION_KEY = 'staff_session';
+export const STAFF_PASS_KEY = 'staff_password';
 const STAFF_USER = 'admin';
-const STAFF_PASS = 'admin';
+const getStoredPass = () => localStorage.getItem(STAFF_PASS_KEY) || 'admin';
 
 const AdminStaff: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(
@@ -47,7 +48,7 @@ const StaffLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     setError('');
     setLoading(true);
     await new Promise<void>((r) => setTimeout(r, 500));
-    if (username.trim() === STAFF_USER && password === STAFF_PASS) {
+    if (username.trim() === STAFF_USER && password === getStoredPass()) {
       onLogin();
     } else {
       setError('Username ose fjalëkalimi është gabim.');
