@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useShop } from '@/contexts/ShopContext';
-import { PRODUCTS, CATEGORIES } from '@/lib/data';
-import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut } from 'lucide-react';
+import { PRODUCTS, CATEGORIES, Product } from '@/lib/data';
+import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut, X, Check, Star } from 'lucide-react';
 
 const STAFF_PASS_KEY = 'staff_password';
 const getStoredPass = () => localStorage.getItem(STAFF_PASS_KEY) || 'admin';
@@ -215,10 +215,260 @@ const Dashboard: React.FC = () => {
   );
 };
 
+const PRODUCT_TYPES: Product['type'][] = ['direct', 'quote', 'custom'];
+const PRODUCT_CATEGORIES = ['cutlery', 'serving', 'shelves', 'sinks', 'equipment', 'bakery', 'butcher'];
+
+interface EditDraft {
+  nameEn: string;
+  nameSq: string;
+  price: string;
+  stock: string;
+  material: string;
+  dimensions: string;
+  specEn: string;
+  specSq: string;
+  category: string;
+  type: Product['type'];
+  featured: boolean;
+  bestSeller: boolean;
+  newArrival: boolean;
+}
+
+const toEditDraft = (p: Product): EditDraft => ({
+  nameEn: p.name.en,
+  nameSq: p.name.sq,
+  price: p.price !== null ? String(p.price) : '',
+  stock: String(p.stock),
+  material: p.material,
+  dimensions: p.dimensions,
+  specEn: p.spec.en,
+  specSq: p.spec.sq,
+  category: p.category,
+  type: p.type,
+  featured: p.featured ?? false,
+  bestSeller: p.bestSeller ?? false,
+  newArrival: p.newArrival ?? false,
+});
+
+const applyDraft = (p: Product, d: EditDraft): Product => ({
+  ...p,
+  name: { en: d.nameEn.trim() || p.name.en, sq: d.nameSq.trim() || p.name.sq },
+  price: d.price.trim() === '' ? null : parseFloat(d.price) || null,
+  stock: parseInt(d.stock) || 0,
+  material: d.material.trim(),
+  dimensions: d.dimensions.trim(),
+  spec: { en: d.specEn.trim(), sq: d.specSq.trim() },
+  category: d.category,
+  type: d.type,
+  featured: d.featured,
+  bestSeller: d.bestSeller,
+  newArrival: d.newArrival,
+});
+
+const ProductViewModal: React.FC<{ product: Product; onClose: () => void }> = ({ product: p, onClose }) => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="absolute inset-0 bg-black/60" />
+    <div
+      className="relative bg-white max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
+        <div className="text-xs font-bold tracking-[0.2em] text-neutral-500">PRODUCT DETAILS</div>
+        <button onClick={onClose} className="text-neutral-400 hover:text-neutral-900 transition">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      <div className="p-6 space-y-5">
+        <div className="flex gap-5 items-start">
+          <img src={p.image} alt={p.name.en} className="w-24 h-24 object-contain bg-neutral-50 border border-neutral-100 p-2 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <div className="font-bold text-lg leading-tight mb-0.5">{p.name.en}</div>
+            <div className="text-sm text-neutral-500 mb-2">{p.name.sq}</div>
+            <div className="text-xs text-neutral-400 font-mono">{p.sku}</div>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {p.featured && <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 font-bold tracking-wider">FEATURED</span>}
+              {p.bestSeller && <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 font-bold tracking-wider">BEST SELLER</span>}
+              {p.newArrival && <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 font-bold tracking-wider">NEW ARRIVAL</span>}
+              <span className="text-[10px] bg-neutral-100 text-neutral-600 px-2 py-0.5 font-bold tracking-wider uppercase">{p.type}</span>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">CATEGORY</div>
+            <div className="font-medium capitalize">{p.category}</div>
+          </div>
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">PRICE</div>
+            <div className="font-bold">{p.price !== null ? `€${p.price.toFixed(2)}` : 'Quote Only'}</div>
+          </div>
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">STOCK</div>
+            <div className={`font-bold ${p.stock > 20 ? 'text-green-700' : p.stock > 5 ? 'text-amber-600' : 'text-red-600'}`}>{p.stock} units</div>
+          </div>
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">MATERIAL</div>
+            <div className="font-medium">{p.material}</div>
+          </div>
+        </div>
+        <div className="bg-neutral-50 p-3 text-sm">
+          <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">DIMENSIONS</div>
+          <div className="font-medium font-mono">{p.dimensions}</div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">SPEC (EN)</div>
+            <div>{p.spec.en}</div>
+          </div>
+          <div className="bg-neutral-50 p-3">
+            <div className="text-[10px] tracking-[0.15em] text-neutral-400 mb-1">SPEC (SQ)</div>
+            <div>{p.spec.sq}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ProductEditModal: React.FC<{
+  product: Product;
+  onClose: () => void;
+  onSave: (updated: Product) => void;
+}> = ({ product, onClose, onSave }) => {
+  const [draft, setDraft] = useState<EditDraft>(() => toEditDraft(product));
+
+  const set = (field: keyof EditDraft, value: string | boolean) =>
+    setDraft((prev) => ({ ...prev, [field]: value }));
+
+  const handleSave = () => {
+    onSave(applyDraft(product, draft));
+    onClose();
+  };
+
+  const inputCls = 'w-full border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900 transition';
+  const labelCls = 'block text-[10px] tracking-[0.15em] text-neutral-500 mb-1';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div
+        className="relative bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
+          <div className="text-xs font-bold tracking-[0.2em] text-neutral-500">EDIT PRODUCT — {product.sku}</div>
+          <button onClick={onClose} className="text-neutral-400 hover:text-neutral-900 transition">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>NAME (EN)</label>
+              <input className={inputCls} value={draft.nameEn} onChange={(e) => set('nameEn', e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>NAME (SQ)</label>
+              <input className={inputCls} value={draft.nameSq} onChange={(e) => set('nameSq', e.target.value)} />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className={labelCls}>PRICE (€) — leave empty for Quote</label>
+              <input className={inputCls} type="number" min="0" step="0.01" value={draft.price} onChange={(e) => set('price', e.target.value)} placeholder="Quote only" />
+            </div>
+            <div>
+              <label className={labelCls}>STOCK (units)</label>
+              <input className={inputCls} type="number" min="0" value={draft.stock} onChange={(e) => set('stock', e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>TYPE</label>
+              <select className={inputCls} value={draft.type} onChange={(e) => set('type', e.target.value as Product['type'])}>
+                {PRODUCT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>CATEGORY</label>
+              <select className={inputCls} value={draft.category} onChange={(e) => set('category', e.target.value)}>
+                {PRODUCT_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>MATERIAL</label>
+              <input className={inputCls} value={draft.material} onChange={(e) => set('material', e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>DIMENSIONS</label>
+            <input className={inputCls} value={draft.dimensions} onChange={(e) => set('dimensions', e.target.value)} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>SPEC (EN)</label>
+              <input className={inputCls} value={draft.specEn} onChange={(e) => set('specEn', e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>SPEC (SQ)</label>
+              <input className={inputCls} value={draft.specSq} onChange={(e) => set('specSq', e.target.value)} />
+            </div>
+          </div>
+          <div className="flex gap-6">
+            {(['featured', 'bestSeller', 'newArrival'] as const).map((flag) => (
+              <label key={flag} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={draft[flag]}
+                  onChange={(e) => set(flag, e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <span className="text-xs font-bold tracking-[0.1em] text-neutral-700">{flag === 'featured' ? 'FEATURED' : flag === 'bestSeller' ? 'BEST SELLER' : 'NEW ARRIVAL'}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-end gap-3 px-6 py-4 border-t border-neutral-200">
+          <button onClick={onClose} className="px-5 py-2.5 text-xs font-bold tracking-[0.15em] border border-neutral-300 hover:border-neutral-900 transition">
+            CANCEL
+          </button>
+          <button onClick={handleSave} className="px-5 py-2.5 text-xs font-bold tracking-[0.15em] bg-neutral-900 text-white hover:bg-neutral-700 transition flex items-center gap-2">
+            <Check className="w-3.5 h-3.5" /> SAVE CHANGES
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProductsAdmin: React.FC = () => {
   const { t } = useShop();
+  const [products, setProducts] = useState<Product[]>(() => [...PRODUCTS]);
+  const [viewProduct, setViewProduct] = useState<Product | null>(null);
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
+  const handleSave = (updated: Product) => {
+    setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  };
+
+  const handleDelete = (id: string) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    setPendingDelete(null);
+  };
+
   return (
     <>
+      {viewProduct && (
+        <ProductViewModal product={viewProduct} onClose={() => setViewProduct(null)} />
+      )}
+      {editProduct && (
+        <ProductEditModal
+          product={editProduct}
+          onClose={() => setEditProduct(null)}
+          onSave={handleSave}
+        />
+      )}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-light">{t.admin.products.title}</h1>
         <button className="bg-neutral-900 text-white px-5 py-2.5 text-xs font-bold tracking-[0.2em] flex items-center gap-2 hover:bg-neutral-700">
@@ -244,20 +494,63 @@ const ProductsAdmin: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {PRODUCTS.map((p) => (
+            {products.map((p) => (
               <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
-                <td className="p-4 flex items-center gap-3"><img src={p.image} className="w-10 h-10 object-contain bg-neutral-50 p-1" alt="" /><span className="font-medium">{p.name.en}</span></td>
-                <td className="p-4 text-neutral-500">{p.sku}</td>
-                <td className="p-4">{p.category}</td>
-                <td className="p-4 font-bold">{p.price ? `€${p.price}` : 'Quote'}</td>
+                <td className="p-4 flex items-center gap-3">
+                  <img src={p.image} className="w-10 h-10 object-contain bg-neutral-50 p-1 border border-neutral-100" alt="" />
+                  <span className="font-medium">{p.name.en}</span>
+                </td>
+                <td className="p-4 text-neutral-500 font-mono text-xs">{p.sku}</td>
+                <td className="p-4 capitalize">{p.category}</td>
+                <td className="p-4 font-bold">{p.price !== null ? `€${p.price.toFixed(2)}` : 'Quote'}</td>
                 <td className="p-4">
-                  <span className={`${p.stock > 20 ? 'text-green-600' : p.stock > 5 ? 'text-amber-600' : 'text-red-600'} font-medium`}>{p.stock}</span>
+                  <span className={`font-medium ${p.stock > 20 ? 'text-green-600' : p.stock > 5 ? 'text-amber-600' : 'text-red-600'}`}>{p.stock}</span>
                 </td>
                 <td className="p-4"><span className="text-xs bg-green-100 text-green-700 px-2 py-1 font-medium">{t.admin.products.active}</span></td>
-                <td className="p-4 flex gap-2">
-                  <button className="text-neutral-500 hover:text-neutral-900"><Eye className="w-4 h-4" /></button>
-                  <button className="text-neutral-500 hover:text-neutral-900"><Edit className="w-4 h-4" /></button>
-                  <button className="text-neutral-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                <td className="p-4">
+                  {pendingDelete === p.id ? (
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-red-600 font-bold mr-1">Delete?</span>
+                      <button
+                        onClick={() => handleDelete(p.id)}
+                        className="p-1 bg-red-600 text-white hover:bg-red-700 transition"
+                        title="Confirm delete"
+                      >
+                        <Check className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => setPendingDelete(null)}
+                        className="p-1 border border-neutral-300 hover:border-neutral-600 transition"
+                        title="Cancel"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setViewProduct(p)}
+                        className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition"
+                        title="View product"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setEditProduct(p)}
+                        className="p-1.5 text-neutral-500 hover:text-blue-700 hover:bg-blue-50 transition"
+                        title="Edit product"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setPendingDelete(p.id)}
+                        className="p-1.5 text-neutral-500 hover:text-red-600 hover:bg-red-50 transition"
+                        title="Delete product"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
