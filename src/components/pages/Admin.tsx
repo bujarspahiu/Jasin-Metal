@@ -729,6 +729,7 @@ const ProductsAdmin: React.FC = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out'>('all');
 
   const filteredProducts = products.filter((p) => {
     const q = search.toLowerCase().trim();
@@ -738,7 +739,11 @@ const ProductsAdmin: React.FC = () => {
       p.name.sq.toLowerCase().includes(q) ||
       p.sku.toLowerCase().includes(q);
     const matchesCategory = !categoryFilter || p.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesStock =
+      stockFilter === 'all' ||
+      (stockFilter === 'out' && p.stock === 0) ||
+      (stockFilter === 'low' && p.stock > 0 && p.stock <= 5);
+    return matchesSearch && matchesCategory && matchesStock;
   });
 
   const handleSave = (updated: Product) => {
@@ -805,13 +810,39 @@ const ProductsAdmin: React.FC = () => {
           ))}
         </select>
       </div>
-      {(search || categoryFilter) && (
+      <div className="flex items-center gap-1 mb-4">
+        {(['all', 'low', 'out'] as const).map((level) => {
+          const label =
+            level === 'all' ? t.admin.products.stockAll :
+            level === 'low' ? t.admin.products.stockLow :
+            t.admin.products.stockOut;
+          const active = stockFilter === level;
+          return (
+            <button
+              key={level}
+              onClick={() => setStockFilter(level)}
+              className={`px-3 py-1.5 text-xs font-bold tracking-[0.12em] border transition ${
+                active
+                  ? level === 'out'
+                    ? 'bg-red-600 border-red-600 text-white'
+                    : level === 'low'
+                    ? 'bg-amber-500 border-amber-500 text-white'
+                    : 'bg-neutral-900 border-neutral-900 text-white'
+                  : 'bg-white border-neutral-200 text-neutral-500 hover:border-neutral-400'
+              }`}
+            >
+              {label.toUpperCase()}
+            </button>
+          );
+        })}
+      </div>
+      {(search || categoryFilter || stockFilter !== 'all') && (
         <div className="flex items-center justify-between mb-3 px-1">
           <span className="text-xs text-neutral-500">
             {filteredProducts.length} / {products.length} {t.admin.products.productsWord}
           </span>
           <button
-            onClick={() => { setSearch(''); setCategoryFilter(''); }}
+            onClick={() => { setSearch(''); setCategoryFilter(''); setStockFilter('all'); }}
             className="text-xs text-neutral-400 hover:text-neutral-700 tracking-[0.1em]"
           >
             {t.admin.products.clearFilters}
@@ -835,7 +866,13 @@ const ProductsAdmin: React.FC = () => {
             {filteredProducts.length === 0 ? (
               <tr>
                 <td colSpan={7} className="p-10 text-center text-neutral-400 text-sm">
-                  {t.admin.products.noProductsFound} &quot;{search || categoryFilter}&quot;
+                  {search || categoryFilter
+                    ? `${t.admin.products.noProductsFound} "${search || categoryFilter}"`
+                    : stockFilter === 'out'
+                    ? t.admin.products.stockOut
+                    : stockFilter === 'low'
+                    ? t.admin.products.stockLow
+                    : t.admin.products.noProductsFound}
                 </td>
               </tr>
             ) : null}
