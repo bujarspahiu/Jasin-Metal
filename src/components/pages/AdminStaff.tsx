@@ -3,6 +3,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ShopProvider } from '@/contexts/ShopContext';
 import Admin from '@/components/pages/Admin';
 import { Lock } from 'lucide-react';
+import { hashPassword, isHashed } from '@/lib/crypto';
 
 const SESSION_KEY = 'staff_session';
 export const STAFF_PASS_KEY = 'staff_password';
@@ -48,8 +49,24 @@ const StaffLogin: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     setError('');
     setLoading(true);
     await new Promise<void>((r) => setTimeout(r, 500));
-    if (username.trim() === STAFF_USER && password === getStoredPass()) {
-      onLogin();
+    if (username.trim() === STAFF_USER) {
+      const stored = getStoredPass();
+      let passwordMatch = false;
+      if (isHashed(stored)) {
+        const enteredHash = await hashPassword(password);
+        passwordMatch = enteredHash === stored;
+      } else {
+        passwordMatch = password === stored;
+        if (passwordMatch) {
+          const hashed = await hashPassword(stored);
+          localStorage.setItem(STAFF_PASS_KEY, hashed);
+        }
+      }
+      if (passwordMatch) {
+        onLogin();
+      } else {
+        setError('Username ose fjalëkalimi është gabim.');
+      }
     } else {
       setError('Username ose fjalëkalimi është gabim.');
     }

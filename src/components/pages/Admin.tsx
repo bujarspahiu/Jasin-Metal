@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useShop } from '@/contexts/ShopContext';
 import { PRODUCTS, CATEGORIES, Product } from '@/lib/data';
 import { LayoutDashboard, Package, ShoppingCart, FileText, Users, Settings, TrendingUp, DollarSign, AlertTriangle, Eye, Edit, Trash2, Plus, Search, ArrowLeft, LogOut, X, Check, Star, Upload, ImageIcon } from 'lucide-react';
+import { hashPassword, isHashed } from '@/lib/crypto';
 
 const STAFF_PASS_KEY = 'staff_password';
 const getStoredPass = () => localStorage.getItem(STAFF_PASS_KEY) || 'admin';
@@ -1041,29 +1042,45 @@ const ChangePasswordForm: React.FC = () => {
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
+    setSaving(true);
 
-    if (currentPass !== getStoredPass()) {
+    const stored = getStoredPass();
+    let currentMatch = false;
+    if (isHashed(stored)) {
+      const enteredHash = await hashPassword(currentPass);
+      currentMatch = enteredHash === stored;
+    } else {
+      currentMatch = currentPass === stored;
+    }
+
+    if (!currentMatch) {
       setMessage({ type: 'error', text: 'Fjalëkalimi aktual është gabim.' });
+      setSaving(false);
       return;
     }
     if (newPass.length < 6) {
       setMessage({ type: 'error', text: 'Fjalëkalimi i ri duhet të ketë të paktën 6 karaktere.' });
+      setSaving(false);
       return;
     }
     if (newPass !== confirmPass) {
       setMessage({ type: 'error', text: 'Fjalëkalimi i ri dhe konfirmimi nuk përputhen.' });
+      setSaving(false);
       return;
     }
 
-    localStorage.setItem(STAFF_PASS_KEY, newPass);
+    const hashed = await hashPassword(newPass);
+    localStorage.setItem(STAFF_PASS_KEY, hashed);
     setCurrentPass('');
     setNewPass('');
     setConfirmPass('');
     setMessage({ type: 'success', text: 'Fjalëkalimi u ndryshua me sukses.' });
+    setSaving(false);
   };
 
   return (
@@ -1106,8 +1123,8 @@ const ChangePasswordForm: React.FC = () => {
           {message.text}
         </div>
       )}
-      <button type="submit" className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] hover:bg-neutral-700">
-        NDRYSHO FJALËKALIMIN
+      <button type="submit" disabled={saving} className="bg-neutral-900 text-white px-8 py-3 text-xs font-bold tracking-[0.2em] hover:bg-neutral-700 disabled:opacity-50">
+        {saving ? 'DUKE RUAJTUR...' : 'NDRYSHO FJALËKALIMIN'}
       </button>
     </form>
   );
